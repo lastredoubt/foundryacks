@@ -87,16 +87,6 @@
       "type": "Item",
       "module": "acks-packs"
     },
-
-    {
-      "name": "acks-arcane-spells-1",
-      "label": "ACKS Arcane Spells 1",
-      "system": "acks",
-      "path": "packs/acks-arcane-spells-1.db",
-      "type": "Item",
-      "module": "acks-packs"
-    },
-
     { 
       "name": "acks-equipment",
       "label": "ACKS Equipment",
