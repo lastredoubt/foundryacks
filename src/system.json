@@ -2,11 +2,17 @@
   "id": "acks",
   "title": "Adventurer Conqueror King System",
   "description": "Play B/X or other OSR compatible content using the ACKS system",
-  "version": "0.9.2",
-  "minimumCoreVersion": "9.0",
-  "compatibleCoreVersion": "9.269",
+  "version": "0.11.0.1a",
+  "compatibility": {
+    "minimum": "10",
+    "verified": "11"
+  },
+  "authors": [
+    {
+      "name": "The Happy Anarchist"
+    }
+  ],
   "templateVersion": 2,
-  "author": "The Happy Anarchist",
   "esmodules": ["acks.js"],
   "styles": ["acks.css"],
   "packs": [
@@ -185,7 +191,7 @@
   "gridUnits": "ft",
   "url": "https://github.com/lastredoubt/foundryacks",
   "manifest": "https://github.com/lastredoubt/foundryacks/blob/v11mk2/src/system.json",
-  "download": "https://github.com/lastredoubt/foundryacks/blob/v11mk2/package/acks-v0.9.2.zip",
+  "download": "https://github.com/lastredoubt/foundryacks/blob/v11mk2/package/acks-v0.11.0.1a.zip",
   "comment_url": "https://github.com/thehappyanarchist/foundryacks",
   "comment_manifest": "https://github.com/thehappyanarchist/foundryacks/raw/master/src/system.json",
   "comment_download": "https://github.com/thehappyanarchist/foundryacks/raw/master/package/acks-v0.9.2.zip"
