@@ -5,6 +5,29 @@ This system provides mechanics and character sheet support, and features a compe
 
 ACKS, like most B/X clones, is also broadly compatible with thousands of modules and other OSR content and rulesets with a minimum of conversion necessary.
 
+## Current Fix Priorities / investingating
+
+See : <https://foundryvtt.com/article/migration/>
+
+- the entirety of the changes revolving around migrating to a new datamodel class - see also <https://foundryvtt.com/article/v10-data-model/>
+- PackageData fields which were previously arrays including: authors, scripts, esmodules, styles, languages, packs, system, and dependencies now use the new SetField type. (6700)
+- Introduced new relationships field for package manifests which replaces the now-deprecated dependencies field. (7075)
+- Deprecated isObjectEmpty in favor of isEmpty. (7128)
+- mergeObject now supports a new performDeletions option to control whether it implements the '-=' shortcut prefixed delete instructions or ignores them. (6582)
+- Compendiums containing Actors, Items, and Adventures now have a strict requirement to declare the system which they are compatible with, either directly or indirectly via package relationships. (7636)
+
+- Verify that changes in game canvas and interface and application are brought up to date to prevent current issues and future depracation
+
+
+## Resolved
+
+- The name field in manifest JSON files (including the dependency field) is being deprecated in favor of id, to reduce confusion about its purpose. There will be a deprecation period for this change and it will become enforced in Version 11. (7009)
+- The author field in manifest JSON is being deprecated in favor of authors in the interest of offering a single standardized way to present the author or authors of a package. (7010)
+- Introduced new compatibility field for package manifests which replaces the now-deprecated minimumCoreVersion and compatibleCoreVersion fields. (7011)
+
+
+
+
 ## ACKS for Foundry VTT Features
 #### **Core Rules**
 - ACKS encumbrance rules (*using coin weight instead of stone* - 1000 coins to a stone)  
