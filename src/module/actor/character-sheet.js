@@ -92,7 +92,7 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
   }
 
   _pushLang(table) {
-    const data = this.actor.data.data;
+    const data = this.actor.system;
     let update = duplicate(data[table]);
     this._chooseLang().then((dialogInput) => {
       const name = CONFIG.ACKS.languages[dialogInput.choice];
@@ -108,7 +108,7 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
   }
 
   _popLang(table, lang) {
-    const data = this.actor.data.data;
+    const data = this.actor.system;
     let update = data[table].value.filter((el) => el != lang);
     let newData = {};
     newData[table] = { value: update };

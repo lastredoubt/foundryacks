@@ -28,7 +28,7 @@ export class AcksCombat {
       }
 
       let initiative = groups[combatant.data.flags.acks.group].initiative;
-      if (combatant.actor.data.data.isSlow) {
+      if (combatant.actor.system.isSlow) {
         initiative -= 1;
       }
 
@@ -177,11 +177,6 @@ export class AcksCombat {
   static updateCombatant(combat, combatant, data) {
     let init = game.settings.get("acks", "initiative");
     // Why do you reroll ?
-// Legacy Slowness code from OSE
-//    if (combatant.actor.data.data.isSlow) {
-//      data.initiative = -789;
-//      return;
-//    }
     if (data.initiative && init == "group") {
       let groupInit = data.initiative;
       // Check if there are any members of the group with init
