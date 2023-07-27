@@ -5,7 +5,7 @@ This system provides mechanics and character sheet support, and features a compe
 
 ACKS, like most B/X clones, is also broadly compatible with thousands of modules and other OSR content and rulesets with a minimum of conversion necessary.
 
-## Current Fix Priorities / investigating
+## Current Fix Priorities / Investigating
 
 See : <https://foundryvtt.com/article/migration/>
 
