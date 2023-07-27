@@ -249,7 +249,7 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
       await item.update({
         _id: li.data("itemId"),
         data: {
-          equipped: !item.data.data.equipped,
+          equipped: !item.system.equipped,
         },
       });
     });

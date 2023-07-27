@@ -619,21 +619,21 @@ export class AcksActor extends Actor {
     this.data.items.forEach((item) => {
       if (item.type === "item") {
         if (option === "detailed") {
-          if (item.data.data.treasure) {
-            totalEncumbrance += item.data.data.weight * item.data.data.quantity.value;
+          if (item.system.treasure) {
+            totalEncumbrance += item.system.weight * item.system.quantity.value;
           } else {
             totalEncumbrance += 166.6;
           }
         } else {
-          if (item.data.data.treasure) {
-            totalEncumbrance += 1000 * item.data.data.quantity.value;
+          if (item.system.treasure) {
+            totalEncumbrance += 1000 * item.system.quantity.value;
           } else {
             totalEncumbrance += 1000;
           }
         }
       } else if (["weapon", "armor"].includes(item.type)) {
         if (option === "detailed") {
-          totalEncumbrance += item.data.data.weight;
+          totalEncumbrance += item.system.weight;
         } else {
           totalEncumbrance += 1000;
         }
@@ -683,7 +683,7 @@ export class AcksActor extends Actor {
       (i) => i.data.type == "item" && i.data.data.treasure
     );
     treasure.forEach((item) => {
-      total += item.data.data.quantity.value * item.data.data.cost
+      total += item.system.quantity.value * item.system.cost
     });
     data.treasure = total;
   }

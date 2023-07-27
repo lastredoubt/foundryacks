@@ -254,7 +254,7 @@ export class AcksActorSheetMonster extends AcksActorSheet {
     html.find(".item-pattern").click(ev => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
-      let currentColor = item.data.data.pattern;
+      let currentColor = item.system.pattern;
       let colors = Object.keys(CONFIG.ACKS.colors);
       let index = colors.indexOf(currentColor);
       if (index + 1 == colors.length) {
