@@ -277,7 +277,8 @@ export class AcksItem extends Item {
    */
   async show() {
     // Basic template rendering data
-    const token = this.actor.token;
+    // Actor#token has been renamed to Actor#prototypeToken
+    const token = this.actor.prototypeToken;
     const templateData = {
       actor: this.actor,
       tokenId: token ? `${token.parent.id}.${token.id}` : null,
@@ -302,7 +303,8 @@ export class AcksItem extends Item {
       content: html,
       speaker: {
         actor: this.actor.id,
-        token: this.actor.token,
+        // Actor#token has been renamed to Actor#prototypeToken
+        token: this.actor.prototypeToken,
         alias: this.actor.name,
       },
     };
