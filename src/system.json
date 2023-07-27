@@ -1,12 +1,18 @@
 {
-  "name": "acks",
+  "id": "acks",
   "title": "Adventurer Conqueror King System",
   "description": "Play B/X or other OSR compatible content using the ACKS system",
-  "version": "0.9.2",
-  "minimumCoreVersion": "9.0",
-  "compatibleCoreVersion": "9.269",
+  "version": "0.11.0.1a",
+  "compatibility": {
+    "minimum": "10",
+    "verified": "11"
+  },
+  "authors": [
+    {
+      "name": "The Happy Anarchist"
+    }
+  ],
   "templateVersion": 2,
-  "author": "The Happy Anarchist",
   "esmodules": ["acks.js"],
   "styles": ["acks.css"],
   "packs": [
@@ -15,7 +21,7 @@
       "label": "ACKS Arcane Spells 1",
       "system": "acks",
       "path": "packs/acks-arcane-spells-1.db",
-      "entity": "Item",
+      "type": "Item",
       "module": "acks-packs"
     },
 
@@ -24,7 +30,7 @@
       "label": "ACKS Arcane Spells 2",
       "system": "acks",
       "path": "packs/acks-arcane-spells-2.db",
-      "entity": "Item",
+      "type": "Item",
       "module": "acks-packs"
     },
 
@@ -33,7 +39,7 @@
       "label": "ACKS Arcane Spells 3",
       "system": "acks",
       "path": "packs/acks-arcane-spells-3.db",
-      "entity": "Item",
+      "type": "Item",
       "module": "acks-packs"
     },
 
@@ -42,7 +48,7 @@
       "label": "ACKS Arcane Spells 4",
       "system": "acks",
       "path": "packs/acks-arcane-spells-4.db",
-      "entity": "Item",
+      "type": "Item",
       "module": "acks-packs"
     },
 
@@ -51,7 +57,7 @@
       "label": "ACKS Armor",
       "system": "acks",
       "path": "packs/acks-armor.db",
-      "entity": "Item",
+      "type": "Item",
       "module": "acks-packs"
     },
 
@@ -60,7 +66,7 @@
       "label": "ACKS Class Abilities",
       "system": "acks",
       "path": "packs/acks-class-abilities.db",
-      "entity": "Item",
+      "type": "Item",
       "module": "acks-packs"
     },
 
@@ -69,7 +75,7 @@
       "label": "ACKS Divine Spells 1",
       "system": "acks",
       "path": "packs/acks-divine-spells-1.db",
-      "entity": "Item",
+      "type": "Item",
       "module": "acks-packs"
     },
 
@@ -78,25 +84,15 @@
       "label": "ACKS Divine Spells 2",
       "system": "acks",
       "path": "packs/acks-divine-spells-2.db",
-      "entity": "Item",
+      "type": "Item",
       "module": "acks-packs"
     },
-
-    {
-      "name": "acks-arcane-spells-1",
-      "label": "ACKS Arcane Spells 1",
-      "system": "acks",
-      "path": "packs/acks-arcane-spells-1.db",
-      "entity": "Item",
-      "module": "acks-packs"
-    },
-
     { 
       "name": "acks-equipment",
       "label": "ACKS Equipment",
       "system": "acks",
       "path": "packs/acks-equipment.db",
-      "entity": "Item",
+      "type": "Item",
       "module": "acks-packs"
     },
 
@@ -105,7 +101,7 @@
       "label": "ACKS Monster Abilities",
       "system": "acks",
       "path": "packs/acks-monster-abilities.db",
-      "entity": "Item",
+      "type": "Item",
       "module": "acks-packs"
     },
 
@@ -114,7 +110,7 @@
       "label": "ACKS Monsters",
       "system": "acks",
       "path": "packs/acks-monsters.db",
-      "entity": "Actor",
+      "type": "Actor",
       "module": "acks-packs"
     },
 
@@ -123,7 +119,7 @@
       "label": "ACKS Proficiencies",
       "system": "acks",
       "path": "packs/acks-proficiencies.db",
-      "entity": "Item",
+      "type": "Item",
       "module": "acks-packs"
     },
 
@@ -132,7 +128,7 @@
       "label": "ACKS Treasure Tables",
       "system": "acks",
       "path": "packs/acks-treasure.db",
-      "entity": "RollTable",
+      "type": "RollTable",
       "module": "acks-packs"
     },
 
@@ -141,7 +137,7 @@
       "label": "ACKS Weapons",
       "system": "acks",
       "path": "packs/acks-weapons.db",
-      "entity": "Item",
+      "type": "Item",
       "module": "acks-packs"
     },
     
@@ -150,7 +146,7 @@
       "label": "ACKS Maps",
       "system": "acks",
       "path": "packs/acks-maps.db",
-      "entity": "Scene",
+      "type": "Scene",
       "module": "acks-packs"
     }    
   ],
@@ -183,7 +179,10 @@
   ],
   "gridDistance": 5,
   "gridUnits": "ft",
-  "url": "https://github.com/thehappyanarchist/foundryacks",
-  "manifest": "https://github.com/thehappyanarchist/foundryacks/raw/master/src/system.json",
-  "download": "https://github.com/thehappyanarchist/foundryacks/raw/master/package/acks-v0.9.2.zip"
+  "url": "https://github.com/lastredoubt/foundryacks",
+  "manifest": "https://github.com/lastredoubt/foundryacks/raw/v11mk2/src/system.json",
+  "download": "https://github.com/lastredoubt/foundryacks/raw/v11mk2/package/acks-v0.11.0.1a.zip",
+  "comment_url": "https://github.com/thehappyanarchist/foundryacks",
+  "comment_manifest": "https://github.com/thehappyanarchist/foundryacks/raw/master/src/system.json",
+  "comment_download": "https://github.com/thehappyanarchist/foundryacks/raw/master/package/acks-v0.9.2.zip"
 }
