@@ -10,6 +10,7 @@ ACKS, like most B/X clones, is also broadly compatible with thousands of modules
 See : <https://foundryvtt.com/article/migration/>
 
 - the entirety of the changes revolving around migrating to a new datamodel class - see also <https://foundryvtt.com/article/v10-data-model/>
+- character generator does not auto-roll, or push forward attributes for new character
 - PackageData fields which were previously arrays including: authors, scripts, esmodules, styles, languages, packs, system, and dependencies now use the new SetField type. (6700)
 - Introduced new relationships field for package manifests which replaces the now-deprecated dependencies field. (7075)
 - Deprecated isObjectEmpty in favor of isEmpty. (7128)
@@ -24,6 +25,7 @@ See : <https://foundryvtt.com/article/migration/>
 - The name field in manifest JSON files (including the dependency field) is being deprecated in favor of id, to reduce confusion about its purpose. There will be a deprecation period for this change and it will become enforced in Version 11. (7009)
 - The author field in manifest JSON is being deprecated in favor of authors in the interest of offering a single standardized way to present the author or authors of a package. (7010)
 - Introduced new compatibility field for package manifests which replaces the now-deprecated minimumCoreVersion and compatibleCoreVersion fields. (7011)
+- Refactored "Required Schema Changes" per https://foundryvtt.com/article/v10-data-model/
 
 
 
