@@ -4,7 +4,7 @@
   "description": "Play B/X or other OSR compatible content using the ACKS system",
   "version": "0.11.0.1a",
   "compatibility": {
-    "minimum": "10",
+    "minimum": "11",
     "verified": "11"
   },
   "authors": [
