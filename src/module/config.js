@@ -1,3 +1,5 @@
+// called from acks.js for ACKS config
+
 export const ACKS = {
   scores: {
     str: "ACKS.scores.str.long",

@@ -1,5 +1,8 @@
-import { AcksActor } from "./entity.js";
-import { AcksEntityTweaks } from "../dialog/entity-tweaks.js";
+// called from character-sheet.js to load AcksActorSheet
+// called from monster-sheet.js to load AcksActorSheet
+
+import { AcksActor } from "./entity.js"; //verified
+import { AcksEntityTweaks } from "../dialog/entity-tweaks.js"; //verified
 
 export class AcksActorSheet extends ActorSheet {
   constructor(...args) {

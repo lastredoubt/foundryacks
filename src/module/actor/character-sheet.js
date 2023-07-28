@@ -1,7 +1,10 @@
-import { AcksActor } from "./entity.js";
-import { AcksActorSheet } from "./actor-sheet.js";
-import { AcksCharacterModifiers } from "../dialog/character-modifiers.js";
-import { AcksCharacterCreator } from "../dialog/character-creation.js";
+// called from acks.js to load AcksActorSheetCharacter
+
+
+import { AcksActor } from "./entity.js"; //verified
+import { AcksActorSheet } from "./actor-sheet.js"; //verified
+import { AcksCharacterModifiers } from "../dialog/character-modifiers.js"; //verified
+import { AcksCharacterCreator } from "../dialog/character-creation.js"; //verified
 
 /**
  * Extend the basic ActorSheet with some very simple modifications

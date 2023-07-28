@@ -1,4 +1,10 @@
-import { AcksDice } from "../dice.js";
+// called from character-sheet.js to load AcksActor
+// called from monster-sheet.js to load AcksActor
+// imported to acks.js to load AcksActor
+// called from actor-sheet.js for AcksActor
+
+
+import { AcksDice } from "../dice.js";  //verified
 
 export class AcksActor extends Actor {
   /**

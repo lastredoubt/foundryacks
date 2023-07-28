@@ -1,18 +1,18 @@
 // Import Modules
-import { AcksItemSheet } from "./module/item/item-sheet.js";
-import { AcksActorSheetCharacter } from "./module/actor/character-sheet.js";
-import { AcksActorSheetMonster } from "./module/actor/monster-sheet.js";
-import { preloadHandlebarsTemplates } from "./module/preloadTemplates.js";
-import { AcksActor } from "./module/actor/entity.js";
-import { AcksItem } from "./module/item/entity.js";
-import { ACKS } from "./module/config.js";
-import { registerSettings } from "./module/settings.js";
-import { registerHelpers } from "./module/helpers.js";
-import * as chat from "./module/chat.js";
-import * as treasure from "./module/treasure.js";
-import * as macros from "./module/macros.js";
-import * as party from "./module/party.js";
-import { AcksCombat } from "./module/combat.js";
+import { AcksItemSheet } from "./module/item/item-sheet.js"; //verified //
+import { AcksActorSheetCharacter } from "./module/actor/character-sheet.js"; //verified //
+import { AcksActorSheetMonster } from "./module/actor/monster-sheet.js"; //verified //
+import { preloadHandlebarsTemplates } from "./module/preloadTemplates.js"; //verified //
+import { AcksActor } from "./module/actor/entity.js"; //verified //
+import { AcksItem } from "./module/item/entity.js"; //verified //
+import { ACKS } from "./module/config.js";  //verified //
+import { registerSettings } from "./module/settings.js"; //verified //
+import { registerHelpers } from "./module/helpers.js"; //verified //
+import * as chat from "./module/chat.js"; //verified //
+import * as treasure from "./module/treasure.js"; //verified //
+import * as macros from "./module/macros.js"; //verified //
+import * as party from "./module/party.js"; //verified //
+import { AcksCombat } from "./module/combat.js"; //verified //
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */

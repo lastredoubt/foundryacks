@@ -1,3 +1,5 @@
+//imported to acks.js for preloadHandlebarsTemplates
+
 export const preloadHandlebarsTemplates = async function () {
     const templatePaths = [
         //Character Sheets

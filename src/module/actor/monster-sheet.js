@@ -1,5 +1,7 @@
-import { AcksActor } from "./entity.js";
-import { AcksActorSheet } from "./actor-sheet.js";
+// called from AcksActor.js to load AcksActorSheetMonster
+
+import { AcksActor } from "./entity.js"; //verified
+import { AcksActorSheet } from "./actor-sheet.js"; //verified
 
 /**
  * Extend the basic ActorSheet with some very simple modifications

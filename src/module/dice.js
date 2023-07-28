@@ -1,3 +1,6 @@
+// called by item/entity.js for AcksDice
+// called by actor/entity.js for AcksDice
+
 export class AcksDice {
   static digestResult(data, roll) {
     let result = {

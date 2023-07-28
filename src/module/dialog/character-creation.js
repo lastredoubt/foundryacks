@@ -1,3 +1,5 @@
+//called from character-sheet.js to load AcksCharacterCreator
+
 import { AcksDice } from "../dice.js";
 
 export class AcksCharacterCreator extends FormApplication {

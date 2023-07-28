@@ -1,3 +1,5 @@
+// called from AcksActor.js for all functions and classes
+
 /**
  * This function is used to hook into the Chat Log context menu to add additional options to each message
  * These options make it easy to conveniently apply damage to controlled tokens based on the value of a Roll

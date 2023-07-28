@@ -1,3 +1,5 @@
+//called from acks.js for registerSettings
+
 export const registerSettings = () => {
   game.settings.register("acks", "initiative", {
     name: game.i18n.localize("ACKS.Setting.Initiative"),

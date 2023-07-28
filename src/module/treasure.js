@@ -1,3 +1,5 @@
+// from acks.js for all classes
+
 export const augmentTable = (table, html, data) => {
   // Treasure Toggle
   let head = html.find(".sheet-header");

@@ -1,4 +1,6 @@
-import { AcksDice } from "../dice.js";
+// called from acks.js for AcksItem
+
+import { AcksDice } from "../dice.js"; //verified
 
 /**
  * Override and extend the basic :class:`Item` implementation
