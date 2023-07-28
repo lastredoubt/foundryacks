@@ -43,20 +43,35 @@ export class AcksItem extends Item {
 
   getChatData(htmlOptions) {
     const data = duplicate(this.data.data);
-
+    // DEBUG entry
+    console.log('DEBUG: get chat data - construct "data" from this.data.data'); // Outputs a message to the Web Console
     // Rich text description
+ 
+    // DEBUG entry
+    console.log('DEBUG: process data.description - before html' + data.description); // Outputs a message to the Web Console
+ 
     data.description = TextEditor.enrichHTML(data.description, htmlOptions);
-
+    // DEBUG entry
+    console.log('DEBUG: process data.description - after html' + data.description); // Outputs a message to the Web Console
+ 
     // Item properties
     const props = [];
     const labels = this.labels;
 
+
+       // DEBUG entry
+       console.log('DEBUG: item type: ' + this.data.type); // Outputs a message to the Web Console
+ 
     if (this.data.type == "weapon") {
       data.tags.forEach(t => props.push(t.value));
     }
     if (this.data.type == "spell") {
       props.push(`${data.class} ${data.lvl}`, data.range, data.duration);
     }
+
+           // DEBUG entry
+           console.log('DEBUG: item equipped?: ' + data.equipped); // Outputs a message to the Web Console
+
     if (data.hasOwnProperty("equipped")) {
       props.push(data.equipped ? "Equipped" : "Not Equipped");
     }

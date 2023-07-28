@@ -23,11 +23,16 @@ Hooks.once("init", async function () {
    * Set an initiative formula for the system
    * @type {String}
    */
+  CONFIG.debug.hooks = true;
   CONFIG.Combat.initiative = {
     formula: "1d6 + @initiative.value",
     decimals: 0,
   };
 
+  //establishes the object for the acks configuration from config.js as CONFIG.ACKS
+  // note, I can't find much documentation on exactly what is in CONFIG, but it is
+  //  a run time variable, mutable, with some presets already in place
+  // (see the:  CONFIG.debug.hooks = true; command)
   CONFIG.ACKS = ACKS;
 
   game.acks = {
