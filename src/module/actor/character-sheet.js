@@ -121,7 +121,9 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
     event.preventDefault();
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.items.get(itemId);
-    return item.updateSource({ "data.quantity.value": parseInt(event.target.value) });
+    //this item.update appears to call the standard update call in JS 
+
+    return item.update({ "data.quantity.value": parseInt(event.target.value) });
   }
 
   _onShowModifiers(event) {
@@ -148,7 +150,7 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
       let actorObject = this.actor;
       actorObject.rollLoyalty({ event: event });
     });
-    
+
     html.find(".ability-score .attribute-name a").click((ev) => {
       let actorObject = this.actor;
       let element = event.currentTarget;
@@ -246,7 +248,9 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
     html.find(".item-toggle").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
-      await item.updateSource({
+      //this item.update appears to call the standard update call in JS 
+
+      await item.update({
         _id: li.data("itemId"),
         data: {
           equipped: !item.system.equipped,
