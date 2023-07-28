@@ -121,7 +121,7 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
     event.preventDefault();
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.items.get(itemId);
-    return item.update({ "data.quantity.value": parseInt(event.target.value) });
+    return item.updateSource({ "data.quantity.value": parseInt(event.target.value) });
   }
 
   _onShowModifiers(event) {
@@ -246,7 +246,7 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
     html.find(".item-toggle").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
-      await item.update({
+      await item.updateSource({
         _id: li.data("itemId"),
         data: {
           equipped: !item.system.equipped,

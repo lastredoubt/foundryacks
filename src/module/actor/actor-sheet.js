@@ -96,9 +96,9 @@ export class AcksActorSheet extends ActorSheet {
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.items.get(itemId);
     if (event.target.dataset.field == "cast") {
-      return item.update({ "data.cast": parseInt(event.target.value) });
+      return item.updateSource({ "data.cast": parseInt(event.target.value) });
     } else if (event.target.dataset.field == "memorize") {
-      return item.update({
+      return item.updateSource({
         "data.memorized": parseInt(event.target.value),
       });
     }
@@ -111,7 +111,7 @@ export class AcksActorSheet extends ActorSheet {
     spells.each((_, el) => {
       let itemId = el.dataset.itemId;
       const item = this.actor.items.get(itemId);
-      item.update({
+      item.updateSource({
         _id: item.id,
         "data.cast": 0,
         "item.system.memorized": 0
@@ -146,7 +146,7 @@ export class AcksActorSheet extends ActorSheet {
       const item = this.actor.items.get(li.data("itemId"));
       if (item.type == "weapon") {
         if (this.actor.data.type === "monster") {
-          item.update({
+          item.updateSource({
             data: { counter: { value: item.system.counter.value - 1 } },
           });
         }

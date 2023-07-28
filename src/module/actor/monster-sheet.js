@@ -152,11 +152,11 @@ export class AcksActorSheetMonster extends AcksActorSheet {
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.items.get(itemId);
     if (event.target.dataset.field == "value") {
-      return item.update({
+      return item.updateSource({
         "data.counter.value": parseInt(event.target.value),
       });
     } else if (event.target.dataset.field == "max") {
-      return item.update({
+      return item.updateSource({
         "data.counter.max": parseInt(event.target.value),
       });
     }
@@ -262,7 +262,7 @@ export class AcksActorSheetMonster extends AcksActorSheet {
       } else {
         index++;
       }
-      item.update({
+      item.updateSource({
         "data.pattern": colors[index]
       })
     });
