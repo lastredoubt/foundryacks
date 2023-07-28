@@ -1,3 +1,4 @@
+//called from character-sheet.js to load AcksCharacterModifiers
 // eslint-disable-next-line no-unused-vars
 export class AcksCharacterModifiers extends FormApplication {
   static get defaultOptions() {

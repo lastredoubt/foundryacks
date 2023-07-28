@@ -1,3 +1,6 @@
+// called from acks.js for registerHelpers
+
+
 export const registerHelpers = async function () {
   // Handlebars template helpers
   Handlebars.registerHelper("eq", function (a, b) {

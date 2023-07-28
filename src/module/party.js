@@ -1,4 +1,6 @@
-import { AcksPartySheet } from "./dialog/party-sheet.js";
+//called from acks.js for *
+
+import { AcksPartySheet } from "./dialog/party-sheet.js"; //verified
 
 export const addControl = (object, html) => {
     let control = `<button class='acks-party-sheet' type="button" title='${game.i18n.localize('ACKS.dialog.partysheet')}'><i class='fas fa-users'></i></button>`;

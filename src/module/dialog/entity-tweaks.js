@@ -1,3 +1,6 @@
+//called from actor-sheet.js for AcksEntityTweaks
+
+
 // eslint-disable-next-line no-unused-vars
 export class AcksEntityTweaks extends FormApplication {
   static get defaultOptions() {

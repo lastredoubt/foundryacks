@@ -1,5 +1,7 @@
-import { AcksActor } from "./entity.js";
-import { AcksActorSheet } from "./actor-sheet.js";
+// called from AcksActor.js to load AcksActorSheetMonster
+
+import { AcksActor } from "./entity.js"; //verified
+import { AcksActorSheet } from "./actor-sheet.js"; //verified
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -152,11 +154,13 @@ export class AcksActorSheetMonster extends AcksActorSheet {
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.items.get(itemId);
     if (event.target.dataset.field == "value") {
-      return item.updateSource({
+      //this item.update appears to call the standard update call in JS 
+      return item.update({
         "data.counter.value": parseInt(event.target.value),
       });
     } else if (event.target.dataset.field == "max") {
-      return item.updateSource({
+      //this item.update appears to call the standard update call in JS 
+      return item.update({
         "data.counter.max": parseInt(event.target.value),
       });
     }
@@ -184,7 +188,7 @@ export class AcksActorSheetMonster extends AcksActorSheet {
       let check = $(ev.currentTarget).closest('.check-field').data('check');
       actorObject.rollAppearing({ event: event, check: check });
     });
-    
+
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
@@ -262,7 +266,9 @@ export class AcksActorSheetMonster extends AcksActorSheet {
       } else {
         index++;
       }
-      item.updateSource({
+      //this item.update appears to call the standard update call in JS 
+
+      item.update({
         "data.pattern": colors[index]
       })
     });

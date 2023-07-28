@@ -1,3 +1,5 @@
+// called from acks.js for AcksCombat
+
 export class AcksCombat {
   static async rollInitiative(combat, data) {
     // Initialize groups.

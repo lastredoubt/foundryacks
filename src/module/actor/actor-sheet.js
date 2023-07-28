@@ -1,5 +1,8 @@
-import { AcksActor } from "./entity.js";
-import { AcksEntityTweaks } from "../dialog/entity-tweaks.js";
+// called from character-sheet.js to load AcksActorSheet
+// called from monster-sheet.js to load AcksActorSheet
+
+import { AcksActor } from "./entity.js"; //verified
+import { AcksEntityTweaks } from "../dialog/entity-tweaks.js"; //verified
 
 export class AcksActorSheet extends ActorSheet {
   constructor(...args) {
@@ -96,9 +99,12 @@ export class AcksActorSheet extends ActorSheet {
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.items.get(itemId);
     if (event.target.dataset.field == "cast") {
-      return item.updateSource({ "data.cast": parseInt(event.target.value) });
+      //this item.update appears to call the standard update call in JS 
+      return item.update({ "data.cast": parseInt(event.target.value) });
     } else if (event.target.dataset.field == "memorize") {
-      return item.updateSource({
+      //this item.update appears to call the standard update call in JS 
+
+      return item.update({
         "data.memorized": parseInt(event.target.value),
       });
     }
@@ -111,7 +117,9 @@ export class AcksActorSheet extends ActorSheet {
     spells.each((_, el) => {
       let itemId = el.dataset.itemId;
       const item = this.actor.items.get(itemId);
-      item.updateSource({
+      //this item.update appears to call the standard update call in JS 
+
+      item.update({
         _id: item.id,
         "data.cast": 0,
         "item.system.memorized": 0
@@ -146,11 +154,13 @@ export class AcksActorSheet extends ActorSheet {
       const item = this.actor.items.get(li.data("itemId"));
       if (item.type == "weapon") {
         if (this.actor.data.type === "monster") {
-          item.updateSource({
+          //this item.update appears to call the standard update call in JS 
+
+          item.update({
             data: { counter: { value: item.system.counter.value - 1 } },
           });
         }
-          item.rollWeapon({ skipDialog: ev.ctrlKey });
+        item.rollWeapon({ skipDialog: ev.ctrlKey });
       } else if (item.type == "spell") {
         item.spendSpell({ skipDialog: ev.ctrlKey });
       } else {
@@ -172,13 +182,13 @@ export class AcksActorSheet extends ActorSheet {
         roll: {},
       };
       actorObject.targetAttack(rollData, attack, {
-		  type: attack,
-		  skipDialog: ev.ctrlKey,
-	  });
+        type: attack,
+        skipDialog: ev.ctrlKey,
+      });
 
-    html.find(".spells .item-reset").click((ev) => {
-      this._resetSpells(ev);
-    });
+      html.find(".spells .item-reset").click((ev) => {
+        this._resetSpells(ev);
+      });
     });
 
     html.find(".hit-dice .attribute-name a").click((ev) => {
@@ -241,9 +251,8 @@ export class AcksActorSheet extends ActorSheet {
       let container = editor.closest(".resizable-editor");
       if (container) {
         let heightDelta = this.position.height - this.options.height;
-        editor.style.height = `${
-          heightDelta + parseInt(container.dataset.editorSize)
-		  }px`;
+        editor.style.height = `${heightDelta + parseInt(container.dataset.editorSize)
+          }px`;
       }
     });
   }
