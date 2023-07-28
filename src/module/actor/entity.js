@@ -514,7 +514,7 @@ export class AcksActor extends Actor {
       label = game.i18n.format("ACKS.roll.attacksWith", {
         name: attData.item.name,
       });
-      dmgParts.push(attData.item.data.damage);
+      dmgParts.push(attData.item.damage);
     }
 
     let ascending = game.settings.get("acks", "ascendingAC");
@@ -532,8 +532,8 @@ export class AcksActor extends Actor {
         data.thac0.mod.melee.toString()
       );
     }
-    if (attData.item && attData.item.data.bonus) {
-      rollParts.push(attData.item.data.bonus);
+    if (attData.item && attData.item.bonus) {
+      rollParts.push(attData.item.bonus);
     }
     let thac0 = data.thac0.value;
     if (options.type == "melee") {
@@ -600,7 +600,7 @@ export class AcksActor extends Actor {
       return;
     }
     this.data.items.forEach((item) => {
-      if (item.type == "weapon" && item.data.slow && item.data.equipped) {
+      if (item.type == "weapon" && item.slow && item.equipped) {
         this.data.data.isSlow = true;
         return;
       }
