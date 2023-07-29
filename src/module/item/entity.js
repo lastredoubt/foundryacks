@@ -183,8 +183,8 @@ export class AcksItem extends Item {
       return `<li class='tag'>${fa}${tag}</li>`;
     };
 
-    const data = this.data.data;
-    switch (this.data.type) {
+    const data = this.system;   //refactoring this.system instead of this.data.data
+    switch (this.type) {  //refactoring
       case "weapon":
         let wTags = formatTag(data.damage, "fa-tint");
         data.tags.forEach((t) => {
