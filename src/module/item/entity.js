@@ -15,7 +15,9 @@ export class AcksItem extends Item {
   prepareData() {
     // Set default image
     let img = CONST.DEFAULT_TOKEN;
-    switch (this.data.type) {
+    //DEBUG REFACTOR - change this.data.type to this.type per
+    // "You should now reference keys which were previously contained within the data object directly."
+    switch (this.type) {
       case "spell":
         img = "/systems/acks/assets/default/spell.png";
         break;
@@ -32,7 +34,8 @@ export class AcksItem extends Item {
         img = "/systems/acks/assets/default/item.png";
         break;
     }
-    if (!this.data.img) this.data.img = img;
+    if (!this.img) this.img = img;   //DEBUG REFACTOR - change this.data.type to this.type per
+    // (NOTE - I only swapped out the second one to this.img, in the parenthesis left it alone)
     super.prepareData();
   }
 
