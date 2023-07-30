@@ -65,9 +65,12 @@ export class AcksActor extends Actor {
   }
 
   isNew() {
-    const data = this.data.data;
-    if (this.data.type == "character") {
-      let ct = 0;
+    //DEBUG refactor isnew - 
+    // const data = this.data.data;
+    const data = this.system;
+    // if (this.data.type == "character") {
+    if (this.type == "character") {
+        let ct = 0;
       Object.values(data.scores).forEach((el) => {
         ct += el.value;
       });
@@ -723,10 +726,13 @@ export class AcksActor extends Actor {
   }
 
   computeModifiers() {
-    if (this.data.type != "character") {
-      return;
+    //refactor - 
+    // if (this.data.type != "character") {
+    if (this.type != "character") {
+        return;
     }
-    const data = this.data.data;
+    // const data = this.data.data;
+    const data = this.system;
 
     const standard = {
       0: -3,
