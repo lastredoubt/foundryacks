@@ -579,6 +579,7 @@ export class AcksActor extends Actor {
       title: label,
     });
   }
+//    DEMARC
 
   async applyDamage(amount = 0, multiplier = 1) {
     amount = Math.ceil(parseInt(amount) * multiplier);
@@ -697,6 +698,8 @@ export class AcksActor extends Actor {
     data.treasure = total;
   }
 
+
+/* 
   computeAC() {
     if (this.data.type != "character") {
       return;
@@ -723,8 +726,39 @@ export class AcksActor extends Actor {
     data.ac.value = baseAc - data.scores.dex.mod - AcShield - data.ac.mod;
     data.ac.shield = AcShield;
     data.aac.shield = AacShield;
+  }    */
+
+
+  computeAC() {
+    if (this.type != "character") {
+      return;
+    }
+    // Compute AC
+    let baseAc = 9;
+    let baseAac = 0;
+    let AcShield = 0;
+    let AacShield = 0;
+    const acData = this.system;
+    acData.aac.naked = baseAac + acData.scores.dex.mod;
+    acData.ac.naked = baseAc - acData.scores.dex.mod;
+    const armors = this.items.filter((i) => i.type == "armor");
+    armors.forEach((a) => {
+      if (a.system.equipped && a.system.type != "shield") {
+        baseAc = a.system.ac;
+        baseAac = a.system.aac.value;
+      } else if (a.system.equipped && a.system.type == "shield") {
+        AcShield = a.system.ac;
+        AacShield = a.system.aac.value;
+      }
+    });
+    acData.aac.value = baseAac + acData.scores.dex.mod + AacShield + acData.aac.mod;
+    acData.ac.value = baseAc - acData.scores.dex.mod - AcShield - acData.ac.mod;
+    acData.ac.shield = AcShield;
+    acData.aac.shield = AacShield;
   }
 
+
+  
   computeModifiers() {
     //refactor - 
     // if (this.data.type != "character") {
