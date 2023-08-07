@@ -45,7 +45,7 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
    * Prepare data for rendering the Actor sheet
    * The prepared data object contains both the actor data as well as additional sheet options
    */
-  getData() {
+  async getData() {
     const data = super.getData();
 
     data.config.ascendingAC = game.settings.get("acks", "ascendingAC");
@@ -54,6 +54,11 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
     data.config.removeMagicBonus = game.settings.get("acks", "removeMagicBonus");
 
     data.isNew = this.actor.isNew();
+    // pre-enrich Description and Notes
+    [ data.richBiography, data.richNotes ] = await Promise.all([
+      TextEditor.enrichHTML(this.object.system.details.biography, { async: true }),
+      TextEditor.enrichHTML(this.object.system.details.notes, { async: true })
+    ]);
     return data;
   }
 
@@ -92,7 +97,7 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
   }
 
   _pushLang(table) {
-    const data = this.actor.data.data;
+    const data = this.actor.system;
     let update = duplicate(data[table]);
     this._chooseLang().then((dialogInput) => {
       const name = CONFIG.ACKS.languages[dialogInput.choice];
@@ -103,16 +108,16 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
       }
       let newData = {};
       newData[table] = update;
-      return this.actor.update({ data: newData });
+      return this.actor.updateSource({ system: newData });
     });
   }
 
   _popLang(table, lang) {
-    const data = this.actor.data.data;
+    const data = this.actor.system;
     let update = data[table].value.filter((el) => el != lang);
     let newData = {};
     newData[table] = { value: update };
-    return this.actor.update({ data: newData });
+    return this.actor.updateSource({ system: newData });
   }
 
   /* -------------------------------------------- */
@@ -121,7 +126,7 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
     event.preventDefault();
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.items.get(itemId);
-    return item.update({ "data.quantity.value": parseInt(event.target.value) });
+    return item.updateSource({ "system.quantity.value": parseInt(event.target.value) });
   }
 
   _onShowModifiers(event) {
@@ -246,10 +251,10 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
     html.find(".item-toggle").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
-      await item.update({
+      await item.updateSource({
         _id: li.data("itemId"),
         data: {
-          equipped: !item.data.data.equipped,
+          equipped: !item.system.equipped,
         },
       });
     });

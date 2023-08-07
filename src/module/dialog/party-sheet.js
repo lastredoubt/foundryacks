@@ -66,7 +66,7 @@ export class AcksPartySheet extends FormApplication {
     `;
 
     let pcs = this.object.documents.filter((actor) => {
-      return actor.getFlag('acks', 'party') && actor.data.type === "character";
+      return actor.getFlag('acks', 'party') && actor.type === "character";
     });
 
     new Dialog({
@@ -80,12 +80,12 @@ export class AcksPartySheet extends FormApplication {
             let toDeal = html.find('input[name="total"]').val();
             // calculate number of shares
             let shares = 0;
-            pcs.forEach(c => {shares += c.data.data.details.xp.share});
+            pcs.forEach(c => {shares += c.system.details.xp.share});
             const value = parseFloat(toDeal) / shares;
             if (value) {
               // Give experience
               pcs.forEach((c) => {
-                c.getExperience(Math.floor(c.data.data.details.xp.share * value));
+                c.getExperience(Math.floor(c.system.details.xp.share * value));
               });
             }
           },

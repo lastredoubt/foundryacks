@@ -36,16 +36,18 @@ export class AcksItemSheet extends ItemSheet {
   /** @override */
   get template() {
     const path = "systems/acks/templates/items/";
-    return `${path}/${this.item.data.type}-sheet.html`;
+    return `${path}/${this.item.type}-sheet.html`;
   }
 
   /**
    * Prepare data for rendering the Item sheet
    * The prepared data object contains both the actor data as well as additional sheet options
    */
-  getData() {
+  async getData() {
     const data = super.getData();
+    data.system = data.data.system;
     data.config = CONFIG.ACKS;
+    data.richDescription = await TextEditor.enrichHTML(data.system.description, { async: true });
     return data;
   }
 
@@ -68,11 +70,11 @@ export class AcksItemSheet extends ItemSheet {
       this.object.popTag(value);
     });
     html.find('a.melee-toggle').click(() => {
-      this.object.update({data: {melee: !this.object.data.data.melee}});
+      this.object.updateSource({data: {melee: !this.object.system.melee}});
     });
 
     html.find('a.missile-toggle').click(() => {
-      this.object.update({data: {missile: !this.object.data.data.missile}});
+      this.object.updateSource({data: {missile: !this.object.system.missile}});
     });
 
     super.activateListeners(html);

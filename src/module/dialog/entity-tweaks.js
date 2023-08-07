@@ -26,9 +26,9 @@ export class AcksEntityTweaks extends FormApplication {
    * @return {Object}
    */
   getData() {
-    const data = this.object.data;
+    const data = this.object;
 
-    if (this.object.data.type === 'character') {
+    if (this.object.type === 'character') {
       data.isCharacter = true;
     }
 
@@ -55,7 +55,7 @@ export class AcksEntityTweaks extends FormApplication {
     event.preventDefault();
 
     // Update the actor.
-    this.object.update(formData);
+    this.object.updateSource(formData);
 
     // Render the updated sheet.
     this.object.sheet.render(true);

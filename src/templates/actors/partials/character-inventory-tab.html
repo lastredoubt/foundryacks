@@ -23,23 +23,23 @@
             </a>
           </div>
           <div class="icon-row flexrow">
-            {{#each item.data.tags as |tag|}}
+            {{#each item.tags as |tag|}}
               {{#if (getTagIcon tag.value)}}
                 <img title="{{tag.title}}" src="{{getTagIcon tag.value}}" width="24" height="24"/>
               {{/if}}
             {{/each}}
-            {{#each item.data.tags as |tag|}}
+            {{#each item.tags as |tag|}}
             {{#unless (getTagIcon tag.value)}}
               <span title="{{tag.title}}">{{tag.value}}{{#unless @last}},{{/unless}}</span>
             {{/unless}}
             {{/each}}
           </div>
           <div class="field-short">
-            {{#if (eq @root.config.encumbrance "detailed")}}{{item.data.weight}}{{else}}_{{/if}}
+            {{#if (eq @root.config.encumbrance "detailed")}}{{item.weight}}{{else}}_{{/if}}
           </div>
           <div class="item-controls">
             {{#if ../owner}}
-            <a class="item-control item-toggle {{#unless item.data.equipped}}item-unequipped{{/unless}}"
+            <a class="item-control item-toggle {{#unless item.equipped}}item-unequipped{{/unless}}"
               title='{{localize "ACKS.items.Equip"}}'>
               <i class="fas fa-tshirt"></i>
             </a>
@@ -81,17 +81,17 @@
           </div>
           <div class="field-short">
             {{#if @root.config.ascendingAC}}
-            {{item.data.aac.value}}
+            {{item.system.aac.value}}
             {{else}}
-            {{item.data.ac.value}}
+            {{item.system.ac.value}}
             {{/if}}
           </div>
           <div class="field-short">
-            {{#if (eq @root.config.encumbrance "detailed")}}{{item.data.weight}}{{else}}_{{/if}}
+            {{#if (eq @root.config.encumbrance "detailed")}}{{item.system.weight}}{{else}}_{{/if}}
           </div>
           <div class="item-controls">
             {{#if ../owner}}
-            <a class="item-control item-toggle {{#unless item.data.equipped}}item-unequipped{{/unless}}"
+            <a class="item-control item-toggle {{#unless item.system.equipped}}item-unequipped{{/unless}}"
               title='{{localize "ACKS.items.Equip"}}'>
               <i class="fas fa-tshirt"></i>
             </a>
@@ -118,7 +118,7 @@
     </li>
     <ol class="item-list">
       {{#each owned.items as |item|}}
-      {{#unless item.data.treasure}}
+      {{#unless item.system.treasure}}
       <li class="item-entry">
         <div class="item flexrow" data-item-id="{{item._id}}">
           <div class="item-name flexrow">
@@ -130,8 +130,8 @@
             </a>
           </div>
           <div class="field-short quantity">
-            <input value="{{item.data.quantity.value}}" type="text"
-              placeholder="0" />{{#if item.data.quantity.max}}<span>/{{item.data.quantity.max}}</span>{{/if}}
+            <input value="{{item.system.quantity.value}}" type="text"
+              placeholder="0" />{{#if item.system.quantity.max}}<span>/{{item.system.quantity.max}}</span>{{/if}}
           </div>
           <div class="field-short"></div>
           <div class="item-controls">
@@ -151,7 +151,7 @@
     <li class="item-titles flexrow">
       <div class="item-caret"><i class="fas fa-caret-down"></i></div>
       <div class="item-name">{{localize "ACKS.items.Treasure"}}</div>
-      <div class="field-long">{{roundTreas data.data.treasure}} <i class="fas fa-circle"></i></div>
+      <div class="field-long">{{roundTreas system.treasure}} <i class="fas fa-circle"></i></div>
       <div class="field-short"><i class="fas fa-hashtag"></i></div>
       <div class="field-short"><i class="fas fa-weight-hanging"></i></div>
       <div class="item-controls">
@@ -161,7 +161,7 @@
     </li>
     <ol class="item-list">
       {{#each owned.items as |item|}}
-      {{#if item.data.treasure}}
+      {{#if item.system.treasure}}
       <li class="item-entry">
         <div class="item flexrow" data-item-id="{{item._id}}">
           <div class="item-name flexrow">
@@ -172,13 +172,13 @@
               </h4>
             </a>
           </div>
-          <div class="field-long">{{multround item.data.quantity.value item.data.cost}}</div>
+          <div class="field-long">{{multround item.system.quantity.value item.system.cost}}</div>
           <div class="field-short quantity">
-            <input value="{{item.data.quantity.value}}" type="text"
-              placeholder="0" />{{#if item.data.quantity.max}}<span>/{{item.data.quantity.max}}</span>{{/if}}
+            <input value="{{item.system.quantity.value}}" type="text"
+              placeholder="0" />{{#if item.system.quantity.max}}<span>/{{item.system.quantity.max}}</span>{{/if}}
           </div>
           <div class="field-short">
-            {{#if (eq @root.config.encumbrance "detailed")}}{{mult item.data.quantity.value item.data.weight}}{{else}}_{{/if}}
+            {{#if (eq @root.config.encumbrance "detailed")}}{{mult item.system.quantity.value item.system.weight}}{{else}}_{{/if}}
           </div>
           <div class="item-controls">
             {{#if ../owner}}
@@ -194,7 +194,7 @@
   </div>
 </section>
 <section>
-  {{#with data.data.encumbrance}}
+  {{#with system.encumbrance}}
   <div class="encumbrance {{#if encumbered}}encumbered{{/if}}">
     <span class="encumbrance-bar" style="width:{{pct}}%"></span>
     <span class="encumbrance-label">{{value}} / {{max}}</span>

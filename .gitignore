@@ -1,2 +1,4 @@
 acks/
 acks.zip
+src/packs/*/
+!src/packs/*.db
