@@ -10,24 +10,29 @@
  * @param {number} slot     The hotbar slot to use
  * @returns {Promise}
  */
-export async function createAcksMacro(data, slot) {
+export function createAcksMacro(data, slot) {
     if ( data.type !== "Item" ) return;
-    if (!( "data" in data ) ) return ui.notifications.warn("You can only create macro buttons for owned Items");
-    const item = data.data;
-  
-    // Create the macro command
-    const command = `game.acks.rollItemMacro("${item.name}");`;
-    let macro = game.macros.find(m => (m.name === item.name) && (m.command === command));
-    if ( !macro ) {
-      macro = await Macro.create({
-        name: item.name,
-        type: "script",
-        img: item.img,
-        command: command,
-        flags: {"acks.itemMacro": true}
-      });
-    }
-    game.user.assignHotbarMacro(macro, slot);
+    // Function must not be async in order to return false and not Promise<false>
+    // So wrap most of the function in a Promise.then() to be resolved asynchronously
+    fromUuid(data.uuid).then(async item => {
+      if (!game.user.isGM && !item.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {
+        return ui.notifications.warn("You can only create macro buttons for owned Items");
+      }
+    
+      // Create the macro command
+      const command = `game.acks.rollItemMacro("${item.name}");`;
+      let macro = game.macros.find(m => (m.name === item.name) && (m.command === command));
+      if ( !macro ) {
+        macro = await Macro.create({
+          name: item.name,
+          type: "script",
+          img: item.img,
+          command: command,
+          flags: {"acks.itemMacro": true}
+        });
+      }
+      game.user.assignHotbarMacro(macro, slot);
+    });
     return false;
   }
   
