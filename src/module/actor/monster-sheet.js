@@ -79,7 +79,7 @@ export class AcksActorSheetMonster extends AcksActorSheet {
     data.isNew = this.actor.isNew();
     [ data.system.details.treasure.link, data.richBiography ] = await Promise.all([
       TextEditor.enrichHTML(data.system.details.treasure.table, { async: true }),
-      textEditor.enrichHTML(this.object.system.details.biography, { async: true })
+      TextEditor.enrichHTML(this.object.system.details.biography, { async: true })
     ]); 
     return data;
   }

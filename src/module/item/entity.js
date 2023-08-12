@@ -39,11 +39,11 @@ export class AcksItem extends Item {
     html.on("click", ".item-name", this._onChatCardToggleContent.bind(this));
   }
 
-  getChatData(htmlOptions) {
+  async getChatData(htmlOptions) {
     const data = duplicate(this.system);
 
     // Rich text description
-    data.description = TextEditor.enrichHTML(data.description, htmlOptions);
+    data.description = await TextEditor.enrichHTML(data.description, htmlOptions);
 
     // Item properties
     const props = [];

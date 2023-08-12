@@ -74,11 +74,11 @@ export class AcksActorSheet extends ActorSheet {
     data.spells = sortedSpells;
   }
 
-  _onItemSummary(event) {
+  async _onItemSummary(event) {
     event.preventDefault();
     let li = $(event.currentTarget).parents(".item"),
       item = this.actor.items.get(li.data("item-id")),
-      description = TextEditor.enrichHTML(item.system.description);
+      description = await TextEditor.enrichHTML(item.system.description);
     // Toggle summary
     if (li.hasClass("expanded")) {
       let summary = li.parents(".item-entry").children(".item-summary");
