@@ -514,7 +514,7 @@ export class AcksActor extends Actor {
       label = game.i18n.format("ACKS.roll.attacksWith", {
         name: attData.item.name,
       });
-      dmgParts.push(attData.item.damage);
+      dmgParts.push(attData.item.system.damage);
     }
 
     let ascending = game.settings.get("acks", "ascendingAC");

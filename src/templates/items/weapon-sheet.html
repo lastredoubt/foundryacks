@@ -24,7 +24,7 @@
               <input
                 type="text"
                 name="system.cost"
-                value="{{system.
+                value="{{system.cost}}"
                 data-dtype="Number"
                 />
             </div>
@@ -36,7 +36,7 @@
               <input
                 type="text"
                 name="system.weight"
-                value="{{system.
+                value="{{system.weight}}""
                 data-dtype="Number"
                 />
             </div>
@@ -72,7 +72,7 @@
             <input
               type="text"
               name="system.damage"
-              value="{{system.
+              value="{{system.damage}}"
               data-dtype="String"
               />
           </div>
@@ -126,7 +126,7 @@
           <label>{{localize 'ACKS.spells.Save'}}</label>
           <div class="form-fields">
             <select name="system.save">
-              {{#select system.}
+              {{#select system.saves}}
               <option value=""></option>
               {{#each config.saves_short as |save a|}}
               <option value="{{a}}">{{save}}</option>
