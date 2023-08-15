@@ -23,23 +23,23 @@
             </a>
           </div>
           <div class="icon-row flexrow">
-            {{#each item.tags as |tag|}}
+            {{#each item.system.tags as |tag|}}
               {{#if (getTagIcon tag.value)}}
                 <img title="{{tag.title}}" src="{{getTagIcon tag.value}}" width="24" height="24"/>
               {{/if}}
             {{/each}}
-            {{#each item.tags as |tag|}}
+            {{#each item.system.tags as |tag|}}
             {{#unless (getTagIcon tag.value)}}
               <span title="{{tag.title}}">{{tag.value}}{{#unless @last}},{{/unless}}</span>
             {{/unless}}
             {{/each}}
           </div>
           <div class="field-short">
-            {{#if (eq @root.config.encumbrance "detailed")}}{{item.weight}}{{else}}_{{/if}}
+            {{#if (eq @root.config.encumbrance "detailed")}}{{item.system.weight}}{{else}}_{{/if}}
           </div>
           <div class="item-controls">
             {{#if ../owner}}
-            <a class="item-control item-toggle {{#unless item.equipped}}item-unequipped{{/unless}}"
+            <a class="item-control item-toggle {{#unless item.system.equipped}}item-unequipped{{/unless}}"
               title='{{localize "ACKS.items.Equip"}}'>
               <i class="fas fa-tshirt"></i>
             </a>
@@ -110,7 +110,7 @@
       <div class="item-caret"><i class="fas fa-caret-down"></i></div>
       <div class="item-name">{{localize "ACKS.items.Misc"}}</div>
       <div class="field-short"><i class="fas fa-hashtag"></i></div>
-      <div class="field-short"></div>
+      <div class="field-short"><i class="fas fa-weight-hanging"></i></div>
       <div class="item-controls">
         <a class="item-control item-create" data-type="item" title="{{localize 'ACKS.Add'}}"><i
             class="fa fa-plus"></i></a>
@@ -133,7 +133,9 @@
             <input value="{{item.system.quantity.value}}" type="text"
               placeholder="0" />{{#if item.system.quantity.max}}<span>/{{item.system.quantity.max}}</span>{{/if}}
           </div>
-          <div class="field-short"></div>
+          <div class="field-short">
+            {{#if (eq @root.config.encumbrance "detailed")}}{{item.system.weight}}{{else}}_{{/if}}
+          </div>
           <div class="item-controls">
             {{#if ../owner}}
             <a class="item-control item-edit" title='{{localize "ACKS.Edit"}}'><i class="fas fa-edit"></i></a>
