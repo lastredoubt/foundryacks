@@ -7,7 +7,9 @@
 
     <div class="card-content">
         <!-- no escape of data.description content -->
-        {{{data.description}}}
+                <!--      {{{data.description}}}    -->
+
+       {{{otherData.description}}}
     </div>
 
     <div class="card-buttons">
@@ -23,19 +25,20 @@
         </button>
         {{/if}}
 
-        {{#if data.save}}
+        {{#if otherData.save}}
         <button data-action="save" data-save="{{data.save}}" disabled>
-            {{lookup config.saves_long data.save}} - {{localize "ACKS.spells.Save"}}
+            {{lookup config.saves_long otherData.save}} - {{localize "ACKS.spells.Save"}}
         </button>
         {{/if}}
 
-        {{#if data.roll}}
-        <button data-action="formula">{{ localize "ACKS.Roll"}} {{data.roll}} {{#if data.blindroll}}({{localize 'ACKS.items.BlindRoll'}}){{/if}}</button>
+        {{#if otherData.roll}}
+        <button data-action="formula">{{ localize "ACKS.Roll"}} {{otherData.roll}} {{#if otherData.blindroll}}({{localize 'ACKS.items.BlindRoll'}}){{/if}}</button>
         {{/if}}
     </div>
 
     <footer class="card-footer">
-        {{#each data.properties}}
+        <!-- what goes in here????-->
+        {{#each otherData.properties}}
         <span>{{this}}</span>
         {{/each}}
     </footer>

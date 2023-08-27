@@ -78,7 +78,8 @@ export class AcksActorSheet extends ActorSheet {
     event.preventDefault();
     let li = $(event.currentTarget).parents(".item"),
       item = this.actor.items.get(li.data("item-id")),
-      description = TextEditor.enrichHTML(item.system.description);
+      // ::DEBUG:: - description = TextEditor.enrichHTML(item.system.description);
+      itemDescription = item.system.description;
     // Toggle summary
     if (li.hasClass("expanded")) {
       let summary = li.parents(".item-entry").children(".item-summary");
@@ -86,7 +87,7 @@ export class AcksActorSheet extends ActorSheet {
     } else {
       // Add item tags
       let div = $(
-        `<div class="item-summary"><ol class="tag-list">${item.getTags()}</ol><div>${description}</div></div>`
+        `<div class="item-summary"><ol class="tag-list">${item.getTags()}</ol><div>${itemDescription}</div></div>`
       );
       li.parents(".item-entry").append(div.hide());
       div.slideDown(200);
@@ -128,6 +129,8 @@ export class AcksActorSheet extends ActorSheet {
   }
 
   activateListeners(html) {
+    console.log('DEBUG: calling super.activateListeners(html)');
+    //console.log(super);
     super.activateListeners(html);
 
 
@@ -135,7 +138,7 @@ export class AcksActorSheet extends ActorSheet {
     html
       .find(".item .item-name h4")
       .click((event) => this._onItemSummary(event));
-
+    //   ::: DEBUG :::
     html.find(".item .item-controls .item-show").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));

@@ -34,7 +34,7 @@ export class AcksItem extends Item {
         img = "/systems/acks/assets/default/item.png";
         break;
     }
-    if (!this.img) this.img = img;   //DEBUG REFACTOR - change this.data.type to this.type per
+    if (!this.img) this.img = img; //DEBUG REFACTOR - change this.data.type to this.type per
     // (NOTE - I only swapped out the second one to this.img, in the parenthesis left it alone)
     super.prepareData();
   }
@@ -44,59 +44,119 @@ export class AcksItem extends Item {
     html.on("click", ".item-name", this._onChatCardToggleContent.bind(this));
   }
 
-  getChatData(htmlOptions) {
-    const data = duplicate(this.data.data);
-    // DEBUG entry
-    console.log('DEBUG: get chat data - construct "data" from this.data.data'); // Outputs a message to the Web Console
-    // Rich text description
- 
-    // DEBUG entry
-    console.log('DEBUG: process data.description - before html' + data.description); // Outputs a message to the Web Console
- 
-    data.description = TextEditor.enrichHTML(data.description, htmlOptions);
-    // DEBUG entry
-    console.log('DEBUG: process data.description - after html' + data.description); // Outputs a message to the Web Console
- 
-    // Item properties
-    const props = [];
+
+
+
+
+
+
+
+
+
+
+  // ::: V11 compatibility ::: - make "getChatData" async to allow for proper retrieval of html data
+  // HTMLOptions can be empty
+  // DID NOT BREAK on application of async
+  async getChatData(htmlOptions) {
+    console.log(
+      'DEBUG: ---->>>>>>>>> \n Enter async getChatData()'
+    );
+    console.log("DEBUG: are there htmlOptions?: \n ---------------------- \n ");
+    console.log(htmlOptions);
+    console.log('DEBUG: what is "this" object? (AcksItem??): \n ---------------------- \n ');
+    console.log(this);
+
+    //originally this.data.data
+    //::: V11 compatibility ::: try this.system - and we stop using "data" since it appears protected, so now "tempData"
+    const tempData = duplicate(this.system);
+    // convert this.type  to a local scope
+    const entryType = this.type;
+    //labels for later properties - search remarks for this.labels below
     const labels = this.labels;
 
 
-       // DEBUG entry
-       console.log('DEBUG: item type: ' + this.data.type); // Outputs a message to the Web Console
- 
-    if (this.data.type == "weapon") {
-      data.tags.forEach(t => props.push(t.value));
+    //::: V11 compatibility ::: - added "await" here - required
+    // Also changed this to a constant for the purposes of handover / construction
+    const prettyDescription = await TextEditor.enrichHTML(tempData.description);
+
+    console.log("DEBUG: Start building props: \n ---------------------- \n");
+
+    // Item properties
+    const props = [];
+
+    //moved this up to consolidate all "this" calls where possible
+    // const labels = this.labels;
+    console.log( "DEBUG: Finished" );
+
+    // DEBUG entry
+    console.log(
+      "DEBUG: entry type: \n -------------------"
+    );
+    console.log(entryType);
+
+
+
+    console.log(
+      "DEBUG: If-cases for entity type for chat  \n -------------------"
+    );
+    if (entryType == "weapon") {
+      console.log("DEBUG: entryType is a weapon");
+      tempData.tags.forEach((t) => props.push(t.value));
     }
-    if (this.data.type == "spell") {
-      props.push(`${data.class} ${data.lvl}`, data.range, data.duration);
+    if (entryType == "spell") {
+      console.log("DEBUG: entryType is a spell");
+      props.push(`${tempData.class} ${tempData.lvl}`, tempData.range, tempData.duration);
     }
 
-           // DEBUG entry
-           console.log('DEBUG: item equipped?: ' + data.equipped); // Outputs a message to the Web Console
+    // DEBUG entry
+    console.log("DEBUG: check if item is equipped?: " + tempData.equipped + '\n --------------------------');
 
-    if (data.hasOwnProperty("equipped")) {
-      props.push(data.equipped ? "Equipped" : "Not Equipped");
+    if (tempData.hasOwnProperty("equipped")) {
+      console.log('DEBUG: the property "equipped" exists, and will change status ');
+      console.log('DEBUG: equipped status is:  ');
+      console.log(tempData.equipped);
+      console.log('-------------------------------');
+
+      props.push(tempData.equipped ? "Equipped" : "Not Equipped");
     }
 
     // Filter properties and return
-    data.properties = props.filter((p) => !!p);
-    return data;
+    tempData.properties = props.filter((p) => !!p);
+    console.log('DEBUG: tempData before RETURN and exiting: \n -------------------------  ');
+    console.log(' -------------------------  ');
+    console.log(tempData);
+
+
+    return tempData;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   rollWeapon(options = {}) {
     let isNPC = this.actor.data.type != "character";
     const targets = 5;
     const data = this.data.data;
     let type = isNPC ? "attack" : "melee";
-    const rollData =
-    {
+    const rollData = {
       item: this.data,
       actor: this.actor.data,
       roll: {
         save: this.data.data.save,
-        target: null
-      }
+        target: null,
+      },
     };
 
     if (data.missile && data.melee && !isNPC) {
@@ -183,8 +243,10 @@ export class AcksItem extends Item {
       return `<li class='tag'>${fa}${tag}</li>`;
     };
 
-    const data = this.system;   //refactoring this.system instead of this.data.data
-    switch (this.type) {  //refactoring
+    const data = this.system; //refactoring this.system instead of this.data.data
+    switch (
+      this.type //refactoring
+    ) {
       case "weapon":
         let wTags = formatTag(data.damage, "fa-tint");
         data.tags.forEach((t) => {
@@ -294,40 +356,99 @@ export class AcksItem extends Item {
   /**
    * Show the item to Chat, creating a chat card which contains follow up attack or damage roll options
    * @return {Promise}
+   *
+   * ::: DEBUG :::
    */
   async show() {
     // Basic template rendering data
     // Actor#token has been renamed to Actor#prototypeToken
+    console.log("DEBUG - called to show() item");
+    console.log("DEBUG - What is 'this' within show() ?");
+    console.log(this);
+
+    //create local scope variables and constants
     const token = this.actor.prototypeToken;
+
+    console.log(
+      " DEBUG: async show() - get token and constant/create the templateData"
+    );
+
+    console.log(
+      " DEBUG: we have the token: show token: \n ---------------------------"
+    );
+    console.log(token);
+    console.log(
+      " DEBUG: continue to create templateData including call to getChatData()"
+    );
+    console.log(
+      " ---------------------------------------------------------------------"
+    );
+    console.log(
+      " DEBUG: calls \n this.actor \n CONFIG.ACKS \nthis.getChatData() for data \n this.hasDamage \n this.hasSave \n this.isHealing \n this.data.type for spell \n this.data for item \n this.labels \n token"
+    );
+    // reconstructed into alphabetical order for ease of debugging
+    //replaced "data" with otherData 
+    // also update "data" entries in item-card.html
+    
+    
+    
+    const receivedChatData = await this.getChatData();
+
+
     const templateData = {
       actor: this.actor,
-      tokenId: token ? `${token.parent.id}.${token.id}` : null,
-      item: this.data,
-      data: this.getChatData(),
-      labels: this.labels,
-      isHealing: this.isHealing,
-      hasDamage: this.hasDamage,
-      isSpell: this.data.type === "spell",
-      hasSave: this.hasSave,
       config: CONFIG.ACKS,
+      otherData: receivedChatData,
+      hasDamage: this.hasDamage,
+      hasSave: this.hasSave,
+      isHealing: this.isHealing,
+      isSpell: this.data.type === "spell",
+      item: this.data,
+      labels: this.labels,
+      tokenId: token ? `${token.parent.id}.${token.id}` : null,
     };
 
     // Render the chat card template
+    console.log("DEBUG: Completed assembly of templatData");
+    console.log(
+      "DEBUG: async show() - get html data and render the template for chat"
+    );
+    console.log(templateData);
+    console.log("DEBUG: look for template data above");
+
+    console.log("DEBUG: getting the HTML template");
+
     const template = `systems/acks/templates/chat/item-card.html`;
+
+    console.log('DEBUG: content of "template": \n ---------------------------');
+    console.log(template);
+    console.log(templateData);
+    console.log('---------------------------');
+
+
+    console.log('DEBUG: calling "rendertemplate"');
     const html = await renderTemplate(template, templateData);
+
+    console.log("DEBUG: building the chatData for show()");
+    console.log("DEBUG: uses: \n html from above \n this.actor.id \n this.actor.token \n this.actor.name ");
 
     // Basic chat message data
     const chatData = {
-      user: game.user.id,
-      type: CONST.CHAT_MESSAGE_TYPES.OTHER,
       content: html,
       speaker: {
         actor: this.actor.id,
-        // Actor#token has been renamed to Actor#prototypeToken
-        token: this.actor.prototypeToken,
+        // Actor#token has been renamed to Actor#prototypeToken - try reverting to token
+        token: this.actor.token,
         alias: this.actor.name,
       },
+      type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+      user: game.user.id,
     };
+
+    console.log("DEBUG: chatdatabuilt");
+    console.log(chatData);
+
+    console.log("DEBUG: enter roll mode");
 
     // Toggle default roll mode
     let rollMode = game.settings.get("core", "rollMode");
@@ -336,7 +457,13 @@ export class AcksItem extends Item {
     if (rollMode === "selfroll") chatData["whisper"] = [game.user.id];
     if (rollMode === "blindroll") chatData["blind"] = true;
 
-    // Create the chat message
+    console.log(
+      "DEBUG: complete roll mode - return chatMessage.create(chatData)"
+    );
+    console.log("DEBUG: Chatmessage is apparentlyan API call in Foundry");
+
+    console.log ('DEBUG - exiting show() and returning with ChatMessage.create(chatData)');
+    // ::: DEBUG ::: Create the chat message
     return ChatMessage.create(chatData);
   }
 

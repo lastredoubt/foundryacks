@@ -13,40 +13,49 @@
                 <h4 class="attribute-name box-title" title="{{ localize 'ACKS.scores.str.long' }}">
                     <a>{{ localize "ACKS.scores.str.short" }}</a></h4>
                 <div class="attribute-value">
-
-                    <input name="data.scores.str.value" type="text" value="{{data.data.scores.str.value}}" placeholder="0" data-dtype="Number" />
+<!--                    <input name="data.scores.str.value" type="text" value="{{data.data.scores.str.value}}" placeholder="0" data-dtype="Number" />
+-->
+                    <input name="data.scores.str.value" type="text" value="{{system.scores.str.value}}" placeholder="0" data-dtype="Number" />
                 </div>
             </li>
             <li class="attribute ability-score" data-score="int">
                 <h4 class="attribute-name box-title" title="{{ localize 'ACKS.scores.int.long' }}">
                     <a>{{ localize "ACKS.scores.int.short" }}</a></h4>
                 <div class="attribute-value">
-                    <input name="data.scores.int.value" type="text" value="{{data.data.scores.int.value}}" placeholder="0"
-                        data-dtype="Number" />
+<!--                     <input name="data.scores.int.value" type="text" value="{{data.data.scores.int.value}}" placeholder="0" data-dtype="Number" />
+ -->
+                    <input name="data.scores.int.value" type="text" value="{{system.scores.int.value}}" placeholder="0" data-dtype="Number" />
                 </div>
             </li>
             <li class="attribute ability-score" data-score="wis">
                 <h4 class="attribute-name box-title" title="{{ localize 'ACKS.scores.wis.long' }}">
                     <a>{{ localize "ACKS.scores.wis.short" }}</a></h4>
                 <div class="attribute-value">
-                    <input name="data.scores.wis.value" type="text" value="{{data.data.scores.wis.value}}" placeholder="0"
-                        data-dtype="Number" />
+<!--                     <input name="data.scores.wis.value" type="text" value="{{data.data.scores.wis.value}}" placeholder="0" data-dtype="Number" />
+ -->
+                     <input name="data.scores.wis.value" type="text" value="{{system.scores.wis.value}}" placeholder="0" data-dtype="Number" />
+
+
                 </div>
             </li>
             <li class="attribute ability-score" data-score="dex">
                 <h4 class="attribute-name box-title" title="{{ localize 'ACKS.scores.dex.long' }}">
                     <a>{{ localize "ACKS.scores.dex.short" }}</a></h4>
                 <div class="attribute-value">
-                    <input name="data.scores.dex.value" type="text" value="{{data.data.scores.dex.value}}" placeholder="0"
-                        data-dtype="Number" />
+                <!--
+                    <input name="data.scores.dex.value" type="text" value="{{data.data.scores.dex.value}}" placeholder="0" data-dtype="Number" />
+                -->
+                    <input name="data.scores.dex.value" type="text" value="{{system.scores.dex.value}}" placeholder="0" data-dtype="Number" />
                 </div>
             </li>
             <li class="attribute ability-score" data-score="con">
                 <h4 class="attribute-name box-title" title="{{ localize 'ACKS.scores.con.long' }}">
                     <a>{{ localize "ACKS.scores.con.short" }}</a></h4>
                 <div class="attribute-value">
-                    <input name="data.scores.con.value" type="text" value="{{data.data.scores.con.value}}" placeholder="0"
-                        data-dtype="Number" />
+                    <!--
+                    <input name="data.scores.con.value" type="text" value="{{data.data.scores.con.value}}" placeholder="0" data-dtype="Number" />
+                    -->
+                    <input name="data.scores.con.value" type="text" value="{{system.scores.con.value}}" placeholder="0" data-dtype="Number" />
                 </div>
             </li>
             <li class="attribute ability-score" data-score="cha">
@@ -61,7 +70,7 @@
     </div>
     {{!-- Resource Tracking --}}
     <div class="resources">
-        <div class="flexrow">
+        <div class="flexrow"> 
             <div class="health">
                 <input class="health-value health-top" name="data.hp.value" type="text" value="{{data.data.hp.value}}"
                     data-dtype="Number" placeholder="0" title="{{localize 'ACKS.Health'}}" />
