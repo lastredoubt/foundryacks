@@ -5,7 +5,15 @@ This system provides mechanics and character sheet support, and features a compe
 
 ACKS, like most B/X clones, is also broadly compatible with thousands of modules and other OSR content and rulesets with a minimum of conversion necessary.
 
-## Current Fix Priorities / investingating
+## Current branch / dev help
+
+I'll try to look at pull requests as submitted. We've enabled issues, but haven't created any at the time of this writing
+
+The main branch is essentially a fork of the original ACKS module from Happy Anarchist things stand. The lr-refactoring branch has been where I've done most of the fixes. Once we have something that doesn't simply load, but provides a playable experience, I intend to merge that as an initial release and register the module at foundry for use in ACKS. 
+
+
+
+## Current Fix Priorities / Investigating
 
 See : <https://foundryvtt.com/article/migration/>
 
