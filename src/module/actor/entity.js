@@ -13,7 +13,7 @@ export class AcksActor extends Actor {
 
   prepareData() {
     super.prepareData();
-    const data = this.data.data;
+    const data = this.system;
 
     // Compute modifiers from actor scores
     this.computeModifiers();
@@ -27,7 +27,7 @@ export class AcksActor extends Actor {
     // Determine Initiative
     if (game.settings.get("acks", "initiative") != "group") {
       data.initiative.value = data.initiative.mod;
-      if (this.data.type == "character") {
+      if (this.type == "character") {
         data.initiative.value += data.scores.dex.mod;
         if (data.isSlow) {
           data.initiative.value -= 1;
@@ -42,16 +42,16 @@ export class AcksActor extends Actor {
   /*  Socket Listeners and Handlers
     /* -------------------------------------------- */
   async getExperience(value, options = {}) {
-    if (this.data.type != "character") {
+    if (this.type != "character") {
       return;
     }
 
     let modified = Math.floor(
-      value + (this.data.data.details.xp.bonus * value) / 100
+      value + (this.system.details.xp.bonus * value) / 100
     );
 
-    await this.update({
-      "data.details.xp.value": modified + this.data.data.details.xp.value,
+    await this.updateSource({
+      "system.details.xp.value": modified + this.system.details.xp.value,
     });
 
     const speaker = ChatMessage.getSpeaker({ actor: this });
@@ -68,14 +68,14 @@ export class AcksActor extends Actor {
     //DEBUG refactor isnew - 
     // const data = this.data.data;
     const data = this.system;
-    // if (this.data.type == "character") {
+    // if (this.type == "character") {
     if (this.type == "character") {
         let ct = 0;
       Object.values(data.scores).forEach((el) => {
         ct += el.value;
       });
       return ct == 0 ? true : false;
-    } else if (this.data.type == "monster") {
+    } else if (this.type == "monster") {
       let ct = 0;
       Object.values(data.saves).forEach((el) => {
         ct += el.value;
@@ -93,8 +93,8 @@ export class AcksActor extends Actor {
       }
     }
 
-    await this.update({
-      "data.saves": {
+    await this.updateSource({
+      "system.saves": {
         death: {
           value: saves.d,
         },
@@ -119,13 +119,13 @@ export class AcksActor extends Actor {
   /* -------------------------------------------- */
 
   async rollHP(options = {}) {
-    let roll = new Roll(this.data.data.hp.hd);
+    let roll = new Roll(this.system.hp.hd);
     await roll.evaluate({
       async: true,
     });
 
-    await this.update({
-      data: {
+    await this.updateSource({
+      system: {
         hp: {
           max: roll.total,
           value: roll.total,
@@ -137,27 +137,27 @@ export class AcksActor extends Actor {
   rollSave(save, options = {}) {
     const label = game.i18n.localize(`ACKS.saves.${save}.long`);
     const rollParts = ["1d20"];
-    if (this.data.type == "character") {
-      rollParts.push(this.data.data.save.mod);
+    if (this.type == "character") {
+      rollParts.push(this.system.save.mod);
     }
       let data = {};
 
-    if (this.data.type == "character") {
+    if (this.type == "character") {
       data = {
-        actor: this.data,
+        actor: this,
         roll: {
           type: "above",
-          target: this.data.data.saves[save].value,
-          magic: this.data.data.scores.wis.mod
+          target: this.system.saves[save].value,
+          magic: this.system.scores.wis.mod
         },
         details: game.i18n.format("ACKS.roll.details.save", { save: label }),
       };
-    } else if (this.data.type == "monster") {
+    } else if (this.type == "monster") {
         data = {
-          actor: this.data,
+          actor: this,
           roll: {
             type: "above",
-            target: this.data.data.saves[save].value,
+            target: this.system.saves[save].value,
           },
           details: game.i18n.format("ACKS.roll.details.save", { save: label }),
         };
@@ -165,7 +165,7 @@ export class AcksActor extends Actor {
       
     let skip = options.event && options.event.ctrlKey;
 
-    const rollMethod = this.data.type == "character" ? AcksDice.RollSave : AcksDice.Roll;
+    const rollMethod = this.type == "character" ? AcksDice.RollSave : AcksDice.Roll;
 
     // Roll and return
     return rollMethod({
@@ -181,27 +181,27 @@ export class AcksActor extends Actor {
 
   rollMorale(options = {}) {
     const rollParts = ["2d6"];
-    rollParts.push(this.data.data.details.morale);
+    rollParts.push(this.system.details.morale);
 
     const data = {
-      actor: this.data,
+      actor: this,
       roll: {
         type: "table",
         table: {
           1: game.i18n.format("ACKS.morale.retreat", {
-            name: this.data.name,
+            name: this.name,
           }),
           3: game.i18n.format("ACKS.morale.fightingWithdrawal", {
-            name: this.data.name,
+            name: this.name,
           }),
           6: game.i18n.format("ACKS.morale.fight", {
-            name: this.data.name,
+            name: this.name,
           }),
           9: game.i18n.format("ACKS.morale.advanceAndPursue", {
-            name: this.data.name,
+            name: this.name,
           }),
           12: game.i18n.format("ACKS.morale.fightToTheDeath", {
-            name: this.data.name,
+            name: this.name,
           }),
         },
       },
@@ -223,27 +223,27 @@ export class AcksActor extends Actor {
 
   rollLoyalty(options = {}) {
     const rollParts = ["2d6"];
-    rollParts.push(this.data.data.details.morale);
+    rollParts.push(this.system.details.morale);
 
     const data = {
-      actor: this.data,
+      actor: this,
       roll: {
         type: "table",
         table: {
           1: game.i18n.format("ACKS.loyalty.hostility", {
-            name: this.data.name,
+            name: this.name,
           }),
           3: game.i18n.format("ACKS.loyalty.resignation", {
-            name: this.data.name,
+            name: this.name,
           }),
           6: game.i18n.format("ACKS.loyalty.grudging", {
-            name: this.data.name,
+            name: this.name,
           }),
           9: game.i18n.format("ACKS.loyalty.loyal", {
-            name: this.data.name,
+            name: this.name,
           }),
           12: game.i18n.format("ACKS.loyalty.fanatic", {
-            name: this.data.name,
+            name: this.name,
           }),
         },
       },
@@ -267,24 +267,24 @@ export class AcksActor extends Actor {
     const rollParts = ["2d6"];
 
     const data = {
-      actor: this.data,
+      actor: this,
       roll: {
         type: "table",
         table: {
           2: game.i18n.format("ACKS.reaction.Hostile", {
-            name: this.data.name,
+            name: this.name,
           }),
           3: game.i18n.format("ACKS.reaction.Unfriendly", {
-            name: this.data.name,
+            name: this.name,
           }),
           6: game.i18n.format("ACKS.reaction.Neutral", {
-            name: this.data.name,
+            name: this.name,
           }),
           9: game.i18n.format("ACKS.reaction.Indifferent", {
-            name: this.data.name,
+            name: this.name,
           }),
           12: game.i18n.format("ACKS.reaction.Friendly", {
-            name: this.data.name,
+            name: this.name,
           }),
         },
       },
@@ -309,10 +309,10 @@ export class AcksActor extends Actor {
     const rollParts = ["1d20"];
 
     const data = {
-      actor: this.data,
+      actor: this,
       roll: {
         type: "check",
-        target: this.data.data.scores[score].value,
+        target: this.system.scores[score].value,
       },
 
       details: game.i18n.format("ACKS.roll.details.attribute", {
@@ -336,13 +336,13 @@ export class AcksActor extends Actor {
 
   rollHitDice(options = {}) {
     const label = game.i18n.localize(`ACKS.roll.hd`);
-    const rollParts = [this.data.data.hp.hd];
-    if (this.data.type == "character") {
-      rollParts.push(this.data.data.scores.con.mod);
+    const rollParts = [this.system.hp.hd];
+    if (this.type == "character") {
+      rollParts.push(this.system.scores.con.mod);
     }
 
     const data = {
-      actor: this.data,
+      actor: this,
       roll: {
         type: "hitdice",
       },
@@ -362,13 +362,13 @@ export class AcksActor extends Actor {
 
   rollBHR(options = {}) {
     const label = game.i18n.localize(`ACKS.roll.bhr`);
-    const rollParts = [this.data.data.hp.bhr];
-    if (this.data.type == "character") {
+    const rollParts = [this.system.hp.bhr];
+    if (this.type == "character") {
       rollParts.push();
     }
 
     const data = {
-      actor: this.data,
+      actor: this,
       roll: {
         type: "Healing",
       },
@@ -390,14 +390,14 @@ export class AcksActor extends Actor {
     const rollParts = [];
     let label = "";
     if (options.check == "wilderness") {
-      rollParts.push(this.data.data.details.appearing.w);
+      rollParts.push(this.system.details.appearing.w);
       label = "(2)";
     } else {
-      rollParts.push(this.data.data.details.appearing.d);
+      rollParts.push(this.system.details.appearing.d);
       label = "(1)";
     }
     const data = {
-      actor: this.data,
+      actor: this,
       roll: {
         type: {
           type: "appearing",
@@ -422,10 +422,10 @@ export class AcksActor extends Actor {
     const rollParts = ["1d20"];
 
     const data = {
-      actor: this.data,
+      actor: this,
       roll: {
         type: "above",
-        target: this.data.data.exploration[expl],
+        target: this.system.exploration[expl],
       },
       details: game.i18n.format("ACKS.roll.details.exploration", {
         expl: label,
@@ -447,10 +447,10 @@ export class AcksActor extends Actor {
   }
 
   rollDamage(attData, options = {}) {
-    const data = this.data.data;
+    const data = this.system;
 
     const rollData = {
-      actor: this.data,
+      actor: this,
       item: attData.item,
       roll: {
         type: "damage",
@@ -506,7 +506,7 @@ export class AcksActor extends Actor {
   }
 
   rollAttack(attData, options = {}) {
-    const data = this.data.data;
+    const data = this.system;
     let rollParts = ["1d20"];
 
     if (game.settings.get("acks", "exploding20s")) {
@@ -515,7 +515,7 @@ export class AcksActor extends Actor {
     
     const dmgParts = [];
     let label = game.i18n.format("ACKS.roll.attacks", {
-      name: this.data.name,
+      name: this.name,
     });
     if (!attData.item) {
       dmgParts.push("1d6");
@@ -557,7 +557,7 @@ export class AcksActor extends Actor {
       dmgParts.push(data.damage.mod.missile);
     }
     const rollData = {
-      actor: this.data,
+      actor: this,
       item: attData.item,
       roll: {
         type: options.type,
@@ -583,14 +583,14 @@ export class AcksActor extends Actor {
 
   async applyDamage(amount = 0, multiplier = 1) {
     amount = Math.ceil(parseInt(amount) * multiplier);
-    const hp = this.data.data.hp;
+    const hp = this.system.hp;
 
     // Remaining goes to health
     const dh = Math.clamped(hp.value - amount, -99, hp.max);
 
     // Update the Actor
-    await this.update({
-      "data.hp.value": dh,
+    await this.updateSource({
+      "system.hp.value": dh,
     });
   }
 
@@ -605,20 +605,20 @@ export class AcksActor extends Actor {
   }
 
   _isSlow() {
-    this.data.data.isSlow = false;
-    if (this.data.type != "character") {
+    this.system.isSlow = false;
+    if (this.type != "character") {
       return;
     }
-    this.data.items.forEach((item) => {
+    this.items.forEach((item) => {
       if (item.type == "weapon" && item.slow && item.equipped) {
-        this.data.data.isSlow = true;
+        this.system.isSlow = true;
         return;
       }
     });
   }
 
   computeEncumbrance() {
-    if (this.data.type !== "character") {
+    if (this.type !== "character") {
       return;
     }
 
@@ -626,7 +626,7 @@ export class AcksActor extends Actor {
 
     let totalEncumbrance = 0;
 
-    this.data.items.forEach((item) => {
+    this.items.forEach((item) => {
       if (item.type === "item") {
         if (option === "detailed") {
           if (item.system.treasure) {
@@ -650,9 +650,9 @@ export class AcksActor extends Actor {
       }
     });
 
-    const maxEncumbrance = this.data.data.encumbrance.max;
+    const maxEncumbrance = this.system.encumbrance.max;
 
-    this.data.data.encumbrance = {
+    this.system.encumbrance = {
       pct: Math.clamped(
         (totalEncumbrance / maxEncumbrance) * 100,
         0,
@@ -663,34 +663,34 @@ export class AcksActor extends Actor {
       value: Math.round(totalEncumbrance),
     };
 
-    if (this.data.data.config.movementAuto) {
+    if (this.system.config.movementAuto) {
       this._calculateMovement();
     }
   }
 
   _calculateMovement() {
-    if (this.data.data.encumbrance.value > this.data.data.encumbrance.max) {
-      this.data.data.movement.base = 0;
-    } else if (this.data.data.encumbrance.value > 10000) {
-      this.data.data.movement.base = 30;
-    } else if (this.data.data.encumbrance.value > 7000) {
-      this.data.data.movement.base = 60;
-    } else if (this.data.data.encumbrance.value > 5000) {
-      this.data.data.movement.base = 90;
+    if (this.system.encumbrance.value > this.system.encumbrance.max) {
+      this.system.movement.base = 0;
+    } else if (this.system.encumbrance.value > 10000) {
+      this.system.movement.base = 30;
+    } else if (this.system.encumbrance.value > 7000) {
+      this.system.movement.base = 60;
+    } else if (this.system.encumbrance.value > 5000) {
+      this.system.movement.base = 90;
     } else {
-      this.data.data.movement.base = 120;
+      this.system.movement.base = 120;
     }
   }
 
   computeTreasure() {
-    if (this.data.type != "character") {
+    if (this.type != "character") {
       return;
     }
-    const data = this.data.data;
+    const data = this.system;
     // Compute treasure
     let total = 0;
-    let treasure = this.data.items.filter(
-      (i) => i.data.type == "item" && i.data.data.treasure
+    let treasure = this.items.filter(
+      (i) => i.type == "item" && i.system.treasure
     );
     treasure.forEach((item) => {
       total += item.system.quantity.value * item.system.cost
@@ -831,7 +831,7 @@ export class AcksActor extends Actor {
     data.scores.cha.retain = data.scores.cha.mod + 4;
     data.scores.cha.loyalty = data.scores.cha.mod;
 
-    const od = {
+    const od = { // This is the dungeonbashing throw values per STR mod (18+ + 4×STR mod)
       0: 0,
       3: 30,
       4: 26,
@@ -878,10 +878,10 @@ export class AcksActor extends Actor {
       
   }
    computeBHR() {
-   if (this.data.type != "character") {
+   if (this.type != "character") {
       return;
     }
-    const data = this.data.data;
+    const data = this.system;
 
     const bhrcalc = {
         0: "1d2",
@@ -906,7 +906,7 @@ export class AcksActor extends Actor {
     );
    };
   computeAAB() {
-    const data = this.data.data;
+    const data = this.system;
     
     data.thac0.bba = 10 - data.thac0.throw;
   }

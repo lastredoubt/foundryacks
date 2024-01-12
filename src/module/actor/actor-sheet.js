@@ -26,7 +26,7 @@ export class AcksActorSheet extends ActorSheet {
 
   activateEditor(target, editorOptions, initialContent) {
     // remove some controls to the editor as the space is lacking
-    if (target == "data.details.description") {
+    if (target == "system.details.description") {
       editorOptions.toolbar = "styleselect bullist hr table removeFormat save";
     }
     super.activateEditor(target, editorOptions, initialContent);
@@ -74,12 +74,12 @@ export class AcksActorSheet extends ActorSheet {
     data.spells = sortedSpells;
   }
 
-  _onItemSummary(event) {
+  async _onItemSummary(event) {
     event.preventDefault();
     let li = $(event.currentTarget).parents(".item"),
-      item = this.actor.items.get(li.data("item-id")),
-      // ::DEBUG:: - description = TextEditor.enrichHTML(item.system.description);
-      itemDescription = item.system.description;
+    item = this.actor.items.get(li.data("item-id")),
+    // ::DEBUG:: - description = TextEditor.enrichHTML(item.system.description);
+    itemDescription = await TextEditor.enrichHTML(item.system.description);
     // Toggle summary
     if (li.hasClass("expanded")) {
       let summary = li.parents(".item-entry").children(".item-summary");
@@ -101,12 +101,12 @@ export class AcksActorSheet extends ActorSheet {
     const item = this.actor.items.get(itemId);
     if (event.target.dataset.field == "cast") {
       //this item.update appears to call the standard update call in JS 
-      return item.update({ "data.cast": parseInt(event.target.value) });
+      return item.updateSource({ "system.cast": parseInt(event.target.value) });
     } else if (event.target.dataset.field == "memorize") {
       //this item.update appears to call the standard update call in JS 
 
-      return item.update({
-        "data.memorized": parseInt(event.target.value),
+      return item.updateSource({
+        "system.memorized": parseInt(event.target.value),
       });
     }
   }
@@ -120,9 +120,9 @@ export class AcksActorSheet extends ActorSheet {
       const item = this.actor.items.get(itemId);
       //this item.update appears to call the standard update call in JS 
 
-      item.update({
+      item.updateSource({
         _id: item.id,
-        "data.cast": 0,
+        "system.cast": 0,
         "item.system.memorized": 0
       });
     });
@@ -159,7 +159,7 @@ export class AcksActorSheet extends ActorSheet {
         if (this.actor.data.type === "monster") {
           //this item.update appears to call the standard update call in JS 
 
-          item.update({
+          item.updateSource({
             data: { counter: { value: item.system.counter.value - 1 } },
           });
         }
@@ -178,10 +178,10 @@ export class AcksActorSheet extends ActorSheet {
 
     html.find(".attack a").click((ev) => {
       let actorObject = this.actor;
-      let element = event.currentTarget;
+      let element = ev.currentTarget;
       let attack = element.parentElement.parentElement.dataset.attack;
       const rollData = {
-        actor: this.data,
+        actor: this,
         roll: {},
       };
       actorObject.targetAttack(rollData, attack, {

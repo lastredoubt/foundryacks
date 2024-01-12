@@ -43,7 +43,7 @@ async function drawTreasure(table, data) {
         const text = result.getChatText();
         data.treasure[result.id] = ({
           img: result.img,
-          text: TextEditor.enrichHTML(text),
+          text: await TextEditor.enrichHTML(text),
         });
 
         if ((result.data.type === CONST.TABLE_RESULT_TYPES.DOCUMENT)
@@ -55,8 +55,8 @@ async function drawTreasure(table, data) {
     }
   } else {
     const results = await table.roll().results;
-    results.forEach((result) => {
-      const text = TextEditor.enrichHTML(result.getChatText());
+    results.forEach(async (result) => {
+      const text = await TextEditor.enrichHTML(result.getChatText());
       data.treasure[result.id] = {img: result.img, text: text};
     });
   }
