@@ -146,7 +146,7 @@ export class AcksItem extends Item {
 
 
   rollWeapon(options = {}) {
-    let isNPC = this.actor.data.type != "character";
+    let isNPC = this.actor.type != "character";
     const targets = 5;
     const data = this.data.data;
     let type = isNPC ? "attack" : "melee";
@@ -154,7 +154,7 @@ export class AcksItem extends Item {
       item: this.data,
       actor: this.actor.data,
       roll: {
-        save: this.data.data.save,
+        save: this.system.save,
         target: null,
       },
     };
@@ -224,9 +224,9 @@ export class AcksItem extends Item {
   }
 
   spendSpell() {
-    this.update({
-      data: {
-        cast: this.data.data.cast + 1,
+    this.updateSource({
+      system: {
+        cast: this.system.cast + 1,
       },
     }).then(() => {
       this.show({ skipDialog: true });
@@ -243,41 +243,41 @@ export class AcksItem extends Item {
       return `<li class='tag'>${fa}${tag}</li>`;
     };
 
-    const data = this.system; //refactoring this.system instead of this.data.data
+    const context = this.system; //refactoring this.system instead of this.data.data
     switch (
       this.type //refactoring
     ) {
       case "weapon":
-        let wTags = formatTag(data.damage, "fa-tint");
-        data.tags.forEach((t) => {
+        let wTags = formatTag(context.damage, "fa-tint");
+        context.tags.forEach((t) => {
           wTags += formatTag(t.value);
         });
-        wTags += formatTag(CONFIG.ACKS.saves_long[data.save], "fa-skull");
-        if (data.missile) {
+        wTags += formatTag(CONFIG.ACKS.saves_long[context.save], "fa-skull");
+        if (context.missile) {
           wTags += formatTag(
-            data.range.short + "/" + data.range.medium + "/" + data.range.long,
+            context.range.short + "/" + context.range.medium + "/" + context.range.long,
             "fa-bullseye"
           );
         }
         return wTags;
       case "armor":
-        return `${formatTag(CONFIG.ACKS.armor[data.type], "fa-tshirt")}`;
+        return `${formatTag(CONFIG.ACKS.armor[context.type], "fa-tshirt")}`;
       case "item":
         return "";
       case "spell":
-        let sTags = `${formatTag(data.class)}${formatTag(
-          data.range
-        )}${formatTag(data.duration)}${formatTag(data.roll)}`;
-        if (data.save) {
-          sTags += formatTag(CONFIG.ACKS.saves_long[data.save], "fa-skull");
+        let sTags = `${formatTag(context.class)}${formatTag(
+          context.range
+        )}${formatTag(context.duration)}${formatTag(context.roll)}`;
+        if (context.save) {
+          sTags += formatTag(CONFIG.ACKS.saves_long[context.save], "fa-skull");
         }
         return sTags;
       case "ability":
         let roll = "";
-        roll += data.roll ? data.roll : "";
-        roll += data.rollTarget ? CONFIG.ACKS.roll_type[data.rollType] : "";
-        roll += data.rollTarget ? data.rollTarget : "";
-        return `${formatTag(data.requirements)}${formatTag(roll)}`;
+        roll += context.roll ? context.roll : "";
+        roll += context.rollTarget ? CONFIG.ACKS.roll_type[context.rollType] : "";
+        roll += context.rollTarget ? context.rollTarget : "";
+        return `${formatTag(context.requirements)}${formatTag(roll)}`;
     }
     return "";
   }
@@ -288,7 +288,7 @@ export class AcksItem extends Item {
     if (data.tags) {
       update = duplicate(data.tags);
     }
-    let newData = {};
+    let newContext = {};
     var regExp = /\(([^)]+)\)/;
     if (update) {
       values.forEach((val) => {
@@ -305,13 +305,13 @@ export class AcksItem extends Item {
         // Auto fill checkboxes
         switch (val) {
           case CONFIG.ACKS.tags.melee:
-            newData.melee = true;
+            newContext.melee = true;
             break;
           case CONFIG.ACKS.tags.slow:
-            newData.slow = true;
+            newContext.slow = true;
             break;
           case CONFIG.ACKS.tags.missile:
-            newData.missile = true;
+            newContext.missile = true;
             break;
         }
         update.push({ title: title, value: val });
@@ -319,17 +319,17 @@ export class AcksItem extends Item {
     } else {
       update = values;
     }
-    newData.tags = update;
-    return this.update({ data: newData });
+    newContext.tags = update;
+    return this.updateSource({ system: newContext });
   }
 
   popTag(value) {
-    const data = this.data.data;
-    let update = data.tags.filter((el) => el.value != value);
-    let newData = {
+    const context = this.system;
+    let update = context.tags.filter((el) => el.value != value);
+    let newContext = {
       tags: update,
     };
-    return this.update({ data: newData });
+    return this.updateSource({ system: newContext });
   }
 
   roll() {
@@ -341,7 +341,7 @@ export class AcksItem extends Item {
         this.spendSpell();
         break;
       case "ability":
-        if (this.data.data.roll) {
+        if (this.system.roll) {
           this.rollFormula();
         } else {
           this.show();
@@ -362,93 +362,44 @@ export class AcksItem extends Item {
   async show() {
     // Basic template rendering data
     // Actor#token has been renamed to Actor#prototypeToken
-    console.log("DEBUG - called to show() item");
-    console.log("DEBUG - What is 'this' within show() ?");
-    console.log(this);
 
     //create local scope variables and constants
     const token = this.actor.prototypeToken;
 
-    console.log(
-      " DEBUG: async show() - get token and constant/create the templateData"
-    );
-
-    console.log(
-      " DEBUG: we have the token: show token: \n ---------------------------"
-    );
-    console.log(token);
-    console.log(
-      " DEBUG: continue to create templateData including call to getChatData()"
-    );
-    console.log(
-      " ---------------------------------------------------------------------"
-    );
-    console.log(
-      " DEBUG: calls \n this.actor \n CONFIG.ACKS \nthis.getChatData() for data \n this.hasDamage \n this.hasSave \n this.isHealing \n this.data.type for spell \n this.data for item \n this.labels \n token"
-    );
-    // reconstructed into alphabetical order for ease of debugging
-    //replaced "data" with otherData 
-    // also update "data" entries in item-card.html
-    
-    
-    
     const receivedChatData = await this.getChatData();
-
 
     const templateData = {
       actor: this.actor,
       config: CONFIG.ACKS,
-      otherData: receivedChatData,
+      context: receivedChatData,
       hasDamage: this.hasDamage,
       hasSave: this.hasSave,
       isHealing: this.isHealing,
-      isSpell: this.data.type === "spell",
-      item: this.data,
+      isSpell: this.type === "spell",
+      item: this,
       labels: this.labels,
       tokenId: token ? `${token.parent.id}.${token.id}` : null,
     };
 
     // Render the chat card template
-    console.log("DEBUG: Completed assembly of templatData");
-    console.log(
-      "DEBUG: async show() - get html data and render the template for chat"
-    );
-    console.log(templateData);
-    console.log("DEBUG: look for template data above");
-
-    console.log("DEBUG: getting the HTML template");
 
     const template = `systems/acks/templates/chat/item-card.html`;
 
-    console.log('DEBUG: content of "template": \n ---------------------------');
-    console.log(template);
-    console.log(templateData);
-    console.log('---------------------------');
-
-
-    console.log('DEBUG: calling "rendertemplate"');
     const html = await renderTemplate(template, templateData);
-
-    console.log("DEBUG: building the chatData for show()");
-    console.log("DEBUG: uses: \n html from above \n this.actor.id \n this.actor.token \n this.actor.name ");
 
     // Basic chat message data
     const chatData = {
       content: html,
       speaker: {
         actor: this.actor.id,
-        // Actor#token has been renamed to Actor#prototypeToken - try reverting to token
+        // this must be actor.token and not actor.prototypeToken
+        // because the latter is not a BaseToken instance
         token: this.actor.token,
         alias: this.actor.name,
       },
       type: CONST.CHAT_MESSAGE_TYPES.OTHER,
       user: game.user.id,
     };
-
-    console.log("DEBUG: chatdatabuilt");
-    console.log(chatData);
-
-    console.log("DEBUG: enter roll mode");
 
     // Toggle default roll mode
     let rollMode = game.settings.get("core", "rollMode");
@@ -457,13 +408,6 @@ export class AcksItem extends Item {
     if (rollMode === "selfroll") chatData["whisper"] = [game.user.id];
     if (rollMode === "blindroll") chatData["blind"] = true;
 
-    console.log(
-      "DEBUG: complete roll mode - return chatMessage.create(chatData)"
-    );
-    console.log("DEBUG: Chatmessage is apparentlyan API call in Foundry");
-
-    console.log ('DEBUG - exiting show() and returning with ChatMessage.create(chatData)');
-    // ::: DEBUG ::: Create the chat message
     return ChatMessage.create(chatData);
   }
 

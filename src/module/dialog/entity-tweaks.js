@@ -29,16 +29,14 @@ export class AcksEntityTweaks extends FormApplication {
    * @return {Object}
    */
   getData() {
-    const data = this.object.data;
+    const context = this.object;
 
-    if (this.object.data.type === 'character') {
-      data.isCharacter = true;
-    }
+    context.isCharacter = context.type === 'character';
 
-    data.user = game.user;
-    data.config = CONFIG.ACKS;
+    context.user = game.user;
+    context.config = CONFIG.ACKS;
 
-    return data;
+    return context;
   }
 
   /* -------------------------------------------- */
@@ -58,7 +56,7 @@ export class AcksEntityTweaks extends FormApplication {
     event.preventDefault();
 
     // Update the actor.
-    this.object.update(formData);
+    this.object.updateSource(formData);
 
     // Render the updated sheet.
     this.object.sheet.render(true);

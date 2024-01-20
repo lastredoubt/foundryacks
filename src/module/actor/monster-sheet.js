@@ -73,12 +73,12 @@ export class AcksActorSheetMonster extends AcksActorSheet {
    * Prepare data for rendering the Actor sheet
    * The prepared data object contains both the actor data as well as additional sheet options
    */
-  getData() {
+  async getData() {
     const data = super.getData();
 
     // Settings
     data.config.morale = game.settings.get("acks", "morale");
-    data.data.data.details.treasure.link = TextEditor.enrichHTML(data.data.data.details.treasure.table);
+    system.system.details.treasure.link = await TextEditor.enrichHTML(system.system.details.treasure.table);
     data.isNew = this.actor.isNew();
     return data;
   }
@@ -100,7 +100,7 @@ export class AcksActorSheetMonster extends AcksActorSheet {
     } else {
       link = `@RollTable[${data.id}]`;
     }
-    this.actor.update({ "data.details.treasure.table": link });
+    this.actor.updateSource({ "system.details.treasure.table": link });
   }
 
   /* -------------------------------------------- */
@@ -139,10 +139,10 @@ export class AcksActorSheetMonster extends AcksActorSheet {
 
   async _resetCounters(event) {
     for (const weapon of this.actor.itemTypes["weapon"]) {
-      await weapon.update({
-        data: {
+      await weapon.updateSource({
+        system: {
           counter: {
-            value: parseInt(weapon.data.data.counter.max, 10),
+            value: parseInt(weapon.system.counter.max, 10),
           },
         },
       });
@@ -155,13 +155,13 @@ export class AcksActorSheetMonster extends AcksActorSheet {
     const item = this.actor.items.get(itemId);
     if (event.target.dataset.field == "value") {
       //this item.update appears to call the standard update call in JS 
-      return item.update({
-        "data.counter.value": parseInt(event.target.value),
+      return item.updateSource({
+        "system.counter.value": parseInt(event.target.value),
       });
     } else if (event.target.dataset.field == "max") {
       //this item.update appears to call the standard update call in JS 
-      return item.update({
-        "data.counter.max": parseInt(event.target.value),
+      return item.updateSource({
+        "system.counter.max": parseInt(event.target.value),
       });
     }
   }
@@ -218,7 +218,7 @@ export class AcksActorSheetMonster extends AcksActorSheet {
         const itemData = {
           name: name ? name : `New ${type.capitalize()}`,
           type: type,
-          data: duplicate(header.dataset),
+          system: duplicate(header.dataset),
         };
         delete itemData.data["type"];
         return itemData;
@@ -268,8 +268,8 @@ export class AcksActorSheetMonster extends AcksActorSheet {
       }
       //this item.update appears to call the standard update call in JS 
 
-      item.update({
-        "data.pattern": colors[index]
+      item.updateSource({
+        "system.pattern": colors[index]
       })
     });
 

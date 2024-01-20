@@ -6,10 +6,7 @@
     </header>
 
     <div class="card-content">
-        <!-- no escape of data.description content -->
-                <!--      {{{data.description}}}    -->
-
-       {{{otherData.description}}}
+       {{{item.system.description}}}
     </div>
 
     <div class="card-buttons">
@@ -18,27 +15,26 @@
         {{#if hasDamage}}
         <button data-action="damage">
             {{#if isHealing}}
-            {{ localize "ACKS.Healing" }}
+            {{localize "ACKS.Healing"}}
             {{else}}
-            {{localize "ACKS.Damage" }}
+            {{localize "ACKS.Damage"}}
             {{/if}}
         </button>
         {{/if}}
 
-        {{#if otherData.save}}
-        <button data-action="save" data-save="{{data.save}}" disabled>
-            {{lookup config.saves_long otherData.save}} - {{localize "ACKS.spells.Save"}}
+        {{#if item.system.save}}
+        <button data-action="save" data-save="{{item.system.save}}" disabled>
+            {{lookup config.saves_long item.system.save}} - {{localize "ACKS.spells.Save"}}
         </button>
         {{/if}}
 
-        {{#if otherData.roll}}
-        <button data-action="formula">{{ localize "ACKS.Roll"}} {{otherData.roll}} {{#if otherData.blindroll}}({{localize 'ACKS.items.BlindRoll'}}){{/if}}</button>
+        {{#if item.system.roll}}
+        <button data-action="formula">{{localize "ACKS.Roll"}} {{item.system.roll}} {{#if item.system.blindroll}}({{localize 'ACKS.items.BlindRoll'}}){{/if}}</button>
         {{/if}}
     </div>
 
     <footer class="card-footer">
-        <!-- what goes in here????-->
-        {{#each otherData.properties}}
+        {{#each item.system.properties}}
         <span>{{this}}</span>
         {{/each}}
     </footer>

@@ -50,9 +50,9 @@ export class AcksItemSheet extends ItemSheet {
    * The prepared data object contains both the actor data as well as additional sheet options
    */
   getData() {
-    const data = super.getData();
-    data.config = CONFIG.ACKS;
-    return data;
+    const context = super.getData();
+    context.config = CONFIG.ACKS;
+    return context;
   }
 
   /* -------------------------------------------- */
@@ -74,11 +74,11 @@ export class AcksItemSheet extends ItemSheet {
       this.object.popTag(value);
     });
     html.find('a.melee-toggle').click(() => {
-      this.object.update({data: {melee: !this.object.data.data.melee}});
+      this.object.updateSource({system: {melee: !this.object.system.melee}});
     });
 
     html.find('a.missile-toggle').click(() => {
-      this.object.update({data: {missile: !this.object.data.data.missile}});
+      this.object.updateSource({system: {missile: !this.object.system.missile}});
     });
 
     super.activateListeners(html);

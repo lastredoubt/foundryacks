@@ -29,10 +29,10 @@ export class AcksCharacterCreator extends FormApplication {
    * @return {Object}
    */
   getData() {
-    let data = this.object.data;
-    data.user = game.user;
-    data.config = CONFIG.ACKS;
-    data.counters = {
+    let context = this.object;
+    context.user = game.user;
+    context.config = CONFIG.ACKS;
+    context.counters = {
       str: 0,
       wis: 0,
       dex: 0,
@@ -41,12 +41,12 @@ export class AcksCharacterCreator extends FormApplication {
       con: 0,
       gold: 0
     }
-    data.stats = {
+    context.stats = {
       sum: 0,
       avg: 0,
       std: 0
     }
-    return data;
+    return context;
   }
 
   /* -------------------------------------------- */
@@ -74,7 +74,7 @@ export class AcksCharacterCreator extends FormApplication {
       $(ev.currentTarget).closest('form').find('button[type="submit"]').removeAttr('disabled');
     }
 
-    this.object.data.stats = {
+    this.object.stats = {
       sum: sum,
       avg: Math.round(10 * sum / n) / 10,
       std: Math.round(100 * std) / 100
@@ -83,11 +83,11 @@ export class AcksCharacterCreator extends FormApplication {
 
   rollScore(score, options = {}) {
     // Increase counter
-    this.object.data.counters[score]++;
+    this.object.counters[score]++;
 
     const label = score != "gold" ? game.i18n.localize(`ACKS.scores.${score}.long`) : "Gold";
     const rollParts = ["3d6"];
-    const data = {
+    const context = {
       roll: {
         type: "result"
       }
@@ -96,11 +96,11 @@ export class AcksCharacterCreator extends FormApplication {
     return AcksDice.Roll({
       event: options.event,
       parts: rollParts,
-      data: data,
+      data: context,
       skipDialog: true,
       speaker: ChatMessage.getSpeaker({ actor: this }),
-      flavor: game.i18n.format('ACKS.dialog.generateScore', { score: label, count: this.object.data.counters[score] }),
-      title: game.i18n.format('ACKS.dialog.generateScore', { score: label, count: this.object.data.counters[score] }),
+      flavor: game.i18n.format('ACKS.dialog.generateScore', { score: label, count: this.object.counters[score] }),
+      title: game.i18n.format('ACKS.dialog.generateScore', { score: label, count: this.object.counters[score] }),
     });
   }
 
@@ -118,7 +118,7 @@ export class AcksCharacterCreator extends FormApplication {
       config: CONFIG.ACKS,
       scores: scores,
       title: game.i18n.localize("ACKS.dialog.generator"),
-      stats: this.object.data.stats,
+      stats: this.object.stats,
       gold: gold
     }
     const content = await renderTemplate("/systems/acks/templates/chat/roll-creation.html", templateData)
@@ -160,7 +160,7 @@ export class AcksCharacterCreator extends FormApplication {
       name: "GP",
       type: "item",
       img: "/systems/acks/assets/gold.png",
-      data: {
+      system: {
         treasure: true,
         cost: 1,
         weight: 1,
@@ -183,7 +183,7 @@ export class AcksCharacterCreator extends FormApplication {
   async _updateObject(event, formData) {
     event.preventDefault();
     // Update the actor
-    this.object.update(formData);
+    this.object.updateSource(formData);
     // Re-draw the updated sheet
     this.object.sheet.render(true);
   }
