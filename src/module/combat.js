@@ -1,13 +1,13 @@
 // called from acks.js for AcksCombat
 
 export class AcksCombat {
-  static async rollInitiative(combat, data) {
+  static async rollInitiative(combat, context) {
     // Initialize groups.
-    data.combatants = [];
+    context.combatants = [];
     let groups = {};
-    combat.data.combatants.forEach((cbt) => {
-      groups[cbt.data.flags.acks.group] = {present: true};
-      data.combatants.push(cbt);
+    combat.system.combatants.forEach((cbt) => {
+      groups[cbt.flags.acks.group] = {present: true};
+      context.combatants.push(cbt);
     });
 
     // Roll initiative for each group.
@@ -24,17 +24,17 @@ export class AcksCombat {
     }
 
     // Set the inititative for each group combatant.
-    for (const combatant of data.combatants) {
+    for (const combatant of context.combatants) {
       if (!combatant.actor) {
         return;
       }
 
-      let initiative = groups[combatant.data.flags.acks.group].initiative;
+      let initiative = groups[combatant.flags.acks.group].initiative;
       if (combatant.actor.system.isSlow) {
         initiative -= 1;
       }
 
-      await combatant.update({
+      await combatant.updateSource({
         initiative: initiative,
       });
     }
@@ -42,7 +42,7 @@ export class AcksCombat {
     combat.setupTurns();
   }
 
-  static async resetInitiative(combat, data) {
+  static async resetInitiative(combat, context) {
     const reroll = game.settings.get("acks", "initiativePersistence");
     if (!["reset", "reroll"].includes(reroll)) {
       return;
@@ -51,13 +51,13 @@ export class AcksCombat {
     combat.resetAll();
   }
 
-  static async individualInitiative(combat, data) {
+  static async individualInitiative(combat, context) {
     const updates = [];
     const messages = [];
 
     let index = 0;
 
-    for (const [id, combatant] of combat.data.combatants.entries()) {
+    for (const [id, combatant] of combat.system.combatants.entries()) {
       const roll = combatant.getInitiativeRoll();
       await roll.evaluate({async: true});
       let value = roll.total;
@@ -109,7 +109,7 @@ export class AcksCombat {
     await combat.updateEmbeddedDocuments("Combatant", updates);
     await CONFIG.ChatMessage.documentClass.create(messages);
 
-    data.turn = 0;
+    context.turn = 0;
   }
 
   static format(object, html, user) {
@@ -128,15 +128,15 @@ export class AcksCombat {
       // Append spellcast and retreat
       const controls = $(ct).find(".combatant-controls .combatant-control");
       const cmbtant = game.combat.combatants.get(ct.dataset.combatantId);
-      const moveActive = cmbtant.data.flags.acks?.moveInCombat ? "active" : "";
+      const moveActive = cmbtant.flags.acks?.moveInCombat ? "active" : "";
       controls.eq(1).after(
         `<a class='combatant-control move-combat ${moveActive}'><i class='fas fa-running'></i></a>`
       );
-      const spellActive = cmbtant.data.flags.acks?.prepareSpell ? "active" : "";
+      const spellActive = cmbtant.flags.acks?.prepareSpell ? "active" : "";
       controls.eq(1).after(
         `<a class='combatant-control prepare-spell ${spellActive}'><i class='fas fa-magic'></i></a>`
       );
-      const holdActive = cmbtant.data.flags.acks?.holdTurn ? "active" : "";
+      const holdActive = cmbtant.flags.acks?.holdTurn ? "active" : "";
       controls.eq(1).after(
         `<a class='combatant-control hold-turn ${holdActive}'><i class='fas fa-pause-circle'></i></a>`
       );
@@ -164,7 +164,7 @@ export class AcksCombat {
 
       // Get group color
       const combatant = object.viewed.combatants.get(ct.dataset.combatantId);
-      let color = combatant.data.flags.acks?.group;
+      let color = combatant.flags.acks?.group;
 
       // Append colored flag
       let controls = $(ct).find(".combatant-controls");
@@ -176,22 +176,22 @@ export class AcksCombat {
     AcksCombat.addListeners(html);
   }
 
-  static updateCombatant(combat, combatant, data) {
+  static updateCombatant(combat, combatant, context) {
     let init = game.settings.get("acks", "initiative");
     // Why do you reroll ?
-    if (data.initiative && init == "group") {
-      let groupInit = data.initiative;
+    if (context.initiative && init == "group") {
+      let groupInit = context.initiative;
       // Check if there are any members of the group with init
       combat.combatants.forEach((ct) => {
         if (
           ct.initiative &&
           ct.initiative != "-789.00" &&
-          ct._id != data._id &&
-          ct.data.flags.acks.group == combatant.data.flags.acks.group
+          ct._id != context._id &&
+          ct.flags.acks.group == combatant.flags.acks.group
         ) {
           groupInit = ct.initiative;
           // Set init
-          data.initiative = parseInt(groupInit);
+          context.initiative = parseInt(groupInit);
         }
       });
     }
@@ -205,7 +205,7 @@ export class AcksCombat {
       const id = $(event.currentTarget).closest(".combatant")[0].dataset.combatantId;
       const isActive = event.currentTarget.classList.contains('active');
       const combatant = game.combat.combatants.get(id);
-      await combatant.update({
+      await combatant.updateSource({
         _id: id,
         flags: {
           acks: {
@@ -222,7 +222,7 @@ export class AcksCombat {
       const id = $(event.currentTarget).closest(".combatant")[0].dataset.combatantId;
       const isActive = event.currentTarget.classList.contains('active');
       const combatant = game.combat.combatants.get(id);
-      await combatant.update({
+      await combatant.updateSource({
         _id: id,
         flags: {
           acks: {
@@ -239,7 +239,7 @@ export class AcksCombat {
       const id = $(event.currentTarget).closest(".combatant")[0].dataset.combatantId;
       const isActive = event.currentTarget.classList.contains('active');
       const combatant = game.combat.combatants.get(id);
-      await combatant.update({
+      await combatant.updateSource({
         _id: id,
         flags: {
           acks: {
@@ -270,7 +270,7 @@ export class AcksCombat {
 
       const id = $(event.currentTarget).closest(".combatant")[0].dataset.combatantId;
       const combatant = game.combat.combatants.get(id);
-      await combatant.update({
+      await combatant.updateSource({
         _id: id,
         flags: {
           acks: {
@@ -287,11 +287,11 @@ export class AcksCombat {
         return;
       }
 
-      const data = {};
-      AcksCombat.rollInitiative(game.combat, data);
+      const context = {};
+      AcksCombat.rollInitiative(game.combat, context);
 
-      await game.combat.update({
-        data: data,
+      await game.combat.updateSource({
+        system: context,
       })
 
       game.combat.setupTurns();
@@ -300,7 +300,7 @@ export class AcksCombat {
 
   static async addCombatant(combatant, options, userId) {
     let color = "black";
-    switch (combatant.token.data.disposition) {
+    switch (combatant.token.disposition) {
       case -1:
         color = "red";
         break;
@@ -312,7 +312,7 @@ export class AcksCombat {
         break;
     }
 
-    await combatant.update({
+    await combatant.updateSource({
       flags: {
         acks: {
           group: color,
@@ -323,7 +323,7 @@ export class AcksCombat {
 
   static activateCombatant(li) {
     const turn = game.combat.turns.findIndex(turn => turn._id === li.data('combatant-id'));
-    game.combat.update({turn: turn})
+    game.combat.updateSource({turn: turn})
   }
 
   static addContextEntry(html, options) {
@@ -334,16 +334,16 @@ export class AcksCombat {
     });
   }
 
-  static async preUpdateCombat(combat, data, diff, id) {
-    if (!data.round) {
+  static async preUpdateCombat(combat, context, diff, id) {
+    if (!context.round) {
       return;
     }
 
-    if (data.round !== 1) {
+    if (context.round !== 1) {
       const reroll = game.settings.get("acks", "initiativePersistence");
 
       if (reroll === "reset") {
-        AcksCombat.resetInitiative(combat, data, diff, id);
+        AcksCombat.resetInitiative(combat, context, diff, id);
         return;
       } else if (reroll === "keep") {
         return;
@@ -353,9 +353,9 @@ export class AcksCombat {
     const init = game.settings.get("acks", "initiative");
 
     if (init === "group") {
-      AcksCombat.rollInitiative(combat, data, diff, id);
+      AcksCombat.rollInitiative(combat, context, diff, id);
     } else if (init === "individual") {
-      AcksCombat.individualInitiative(combat, data, diff, id);
+      AcksCombat.individualInitiative(combat, context, diff, id);
     }
   }
 }

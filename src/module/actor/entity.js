@@ -13,7 +13,7 @@ export class AcksActor extends Actor {
 
   prepareData() {
     super.prepareData();
-    const data = this.system;
+    const context = this.system;
 
     // Compute modifiers from actor scores
     this.computeModifiers();
@@ -26,17 +26,17 @@ export class AcksActor extends Actor {
 
     // Determine Initiative
     if (game.settings.get("acks", "initiative") != "group") {
-      data.initiative.value = data.initiative.mod;
+      context.initiative.value = context.initiative.mod;
       if (this.type == "character") {
-        data.initiative.value += data.scores.dex.mod;
-        if (data.isSlow) {
-          data.initiative.value -= 1;
+        context.initiative.value += context.scores.dex.mod;
+        if (context.isSlow) {
+          context.initiative.value -= 1;
         }
       }
     } else {
-      data.initiative.value = 0;
+      context.initiative.value = 0;
     }
-    data.movement.encounter = data.movement.base / 3;
+    context.movement.encounter = context.movement.base / 3;
   }
   /* -------------------------------------------- */
   /*  Socket Listeners and Handlers
@@ -67,17 +67,17 @@ export class AcksActor extends Actor {
   isNew() {
     //DEBUG refactor isnew - 
     // const data = this.data.data;
-    const data = this.system;
+    const context = this.system;
     // if (this.type == "character") {
     if (this.type == "character") {
         let ct = 0;
-      Object.values(data.scores).forEach((el) => {
+      Object.values(context.scores).forEach((el) => {
         ct += el.value;
       });
       return ct == 0 ? true : false;
     } else if (this.type == "monster") {
       let ct = 0;
-      Object.values(data.saves).forEach((el) => {
+      Object.values(context.saves).forEach((el) => {
         ct += el.value;
       });
       return ct == 0 ? true : false;
@@ -140,10 +140,10 @@ export class AcksActor extends Actor {
     if (this.type == "character") {
       rollParts.push(this.system.save.mod);
     }
-      let data = {};
+      let context = {};
 
     if (this.type == "character") {
-      data = {
+      context = {
         actor: this,
         roll: {
           type: "above",
@@ -153,7 +153,7 @@ export class AcksActor extends Actor {
         details: game.i18n.format("ACKS.roll.details.save", { save: label }),
       };
     } else if (this.type == "monster") {
-        data = {
+        context = {
           actor: this,
           roll: {
             type: "above",
@@ -171,7 +171,7 @@ export class AcksActor extends Actor {
     return rollMethod({
       event: options.event,
       parts: rollParts,
-      data: data,
+      data: context,
       skipDialog: skip,
       speaker: ChatMessage.getSpeaker({ actor: this }),
       flavor: game.i18n.format("ACKS.roll.save", { save: label }),
@@ -183,7 +183,7 @@ export class AcksActor extends Actor {
     const rollParts = ["2d6"];
     rollParts.push(this.system.details.morale);
 
-    const data = {
+    const context = {
       actor: this,
       roll: {
         type: "table",
@@ -213,7 +213,7 @@ export class AcksActor extends Actor {
     return AcksDice.Roll({
       event: options.event,
       parts: rollParts,
-      data: data,
+      data: context,
       skipDialog: skip,
       speaker: ChatMessage.getSpeaker({ actor: this }),
       flavor: game.i18n.localize("ACKS.roll.morale"),
@@ -225,7 +225,7 @@ export class AcksActor extends Actor {
     const rollParts = ["2d6"];
     rollParts.push(this.system.details.morale);
 
-    const data = {
+    const context = {
       actor: this,
       roll: {
         type: "table",
@@ -255,7 +255,7 @@ export class AcksActor extends Actor {
     return AcksDice.Roll({
       event: options.event,
       parts: rollParts,
-      data: data,
+      data: context,
       skipDialog: skip,
       speaker: ChatMessage.getSpeaker({ actor: this }),
       flavor: game.i18n.localize("ACKS.loyalty.check"),
@@ -266,7 +266,7 @@ export class AcksActor extends Actor {
   rollReaction(options = {}) {
     const rollParts = ["2d6"];
 
-    const data = {
+    const context = {
       actor: this,
       roll: {
         type: "table",
@@ -296,7 +296,7 @@ export class AcksActor extends Actor {
     return AcksDice.Roll({
       event: options.event,
       parts: rollParts,
-      data: data,
+      data: context,
       skipDialog: skip,
       speaker: ChatMessage.getSpeaker({ actor: this }),
       flavor: game.i18n.localize("ACKS.reaction.check"),
@@ -308,7 +308,7 @@ export class AcksActor extends Actor {
     const label = game.i18n.localize(`ACKS.scores.${score}.long`);
     const rollParts = ["1d20"];
 
-    const data = {
+    const context = {
       actor: this,
       roll: {
         type: "check",
@@ -326,7 +326,7 @@ export class AcksActor extends Actor {
     return AcksDice.Roll({
       event: options.event,
       parts: rollParts,
-      data: data,
+      data: context,
       skipDialog: skip,
       speaker: ChatMessage.getSpeaker({ actor: this }),
       flavor: game.i18n.format("ACKS.roll.attribute", { attribute: label }),
@@ -341,7 +341,7 @@ export class AcksActor extends Actor {
       rollParts.push(this.system.scores.con.mod);
     }
 
-    const data = {
+    const context = {
       actor: this,
       roll: {
         type: "hitdice",
@@ -352,7 +352,7 @@ export class AcksActor extends Actor {
     return AcksDice.Roll({
       event: options.event,
       parts: rollParts,
-      data: data,
+      data: context,
       skipDialog: true,
       speaker: ChatMessage.getSpeaker({ actor: this }),
       flavor: label,
@@ -367,7 +367,7 @@ export class AcksActor extends Actor {
       rollParts.push();
     }
 
-    const data = {
+    const context = {
       actor: this,
       roll: {
         type: "Healing",
@@ -378,7 +378,7 @@ export class AcksActor extends Actor {
     return AcksDice.Roll({
       event: options.event,
       parts: rollParts,
-      data: data,
+      data: context,
       skipDialog: true,
       speaker: ChatMessage.getSpeaker({ actor: this }),
       flavor: label,
@@ -396,7 +396,7 @@ export class AcksActor extends Actor {
       rollParts.push(this.system.details.appearing.d);
       label = "(1)";
     }
-    const data = {
+    const context = {
       actor: this,
       roll: {
         type: {
@@ -409,7 +409,7 @@ export class AcksActor extends Actor {
     return AcksDice.Roll({
       event: options.event,
       parts: rollParts,
-      data: data,
+      data: context,
       skipDialog: true,
       speaker: ChatMessage.getSpeaker({ actor: this }),
       flavor: game.i18n.format("ACKS.roll.appearing", { type: label }),
@@ -421,7 +421,7 @@ export class AcksActor extends Actor {
     const label = game.i18n.localize(`ACKS.exploration.${expl}.long`);
     const rollParts = ["1d20"];
 
-    const data = {
+    const context = {
       actor: this,
       roll: {
         type: "above",
@@ -438,7 +438,7 @@ export class AcksActor extends Actor {
     return AcksDice.Roll({
       event: options.event,
       parts: rollParts,
-      data: data,
+      data: context,
       skipDialog: skip,
       speaker: ChatMessage.getSpeaker({ actor: this }),
       flavor: game.i18n.format("ACKS.roll.exploration", { exploration: label }),
@@ -447,7 +447,7 @@ export class AcksActor extends Actor {
   }
 
   rollDamage(attData, options = {}) {
-    const data = this.system;
+    const context = this.system;
 
     const rollData = {
       actor: this,
@@ -466,17 +466,17 @@ export class AcksActor extends Actor {
 
     // Add Str to damage
     if (attData.roll.type == "melee") {
-      dmgParts.push(data.scores.str.mod);
+      dmgParts.push(context.scores.str.mod);
     }
 
     // Add Melee mod to damage
     if (attData.roll.type == "melee") {
-      dmgParts.push(data.damage.mod.melee);
+      dmgParts.push(context.damage.mod.melee);
     }
 
     // Add Missile mod to damage
     if (attData.roll.type == "missile") {
-      dmgParts.push(data.damage.mod.missile);
+      dmgParts.push(context.damage.mod.missile);
     }
 
     // Damage roll
@@ -491,22 +491,22 @@ export class AcksActor extends Actor {
     });
   }
 
-  async targetAttack(data, type, options) {
+  async targetAttack(context, type, options) {
     if (game.user.targets.size > 0) {
       for (let t of game.user.targets.values()) {
-        data.roll.target = t;
-        await this.rollAttack(data, {
+        context.roll.target = t;
+        await this.rollAttack(context, {
           type: type,
           skipDialog: options.skipDialog,
         });
       }
     } else {
-      this.rollAttack(data, { type: type, skipDialog: options.skipDialog });
+      this.rollAttack(context, { type: type, skipDialog: options.skipDialog });
     }
   }
 
   rollAttack(attData, options = {}) {
-    const data = this.system;
+    const context = this.system;
     let rollParts = ["1d20"];
 
     if (game.settings.get("acks", "exploding20s")) {
@@ -528,33 +528,33 @@ export class AcksActor extends Actor {
 
     let ascending = game.settings.get("acks", "ascendingAC");
     if (ascending) {
-      rollParts.push(data.thac0.bba.toString());
+      rollParts.push(context.thac0.bba.toString());
     }
     if (options.type == "missile") {
       rollParts.push(
-        data.scores.dex.mod.toString(),
-        data.thac0.mod.missile.toString()
+        context.scores.dex.mod.toString(),
+        context.thac0.mod.missile.toString()
       );
     } else if (options.type == "melee") {
       rollParts.push(
-        data.scores.str.mod.toString(),
-        data.thac0.mod.melee.toString()
+        context.scores.str.mod.toString(),
+        context.thac0.mod.melee.toString()
       );
     }
     if (attData.item && attData.item.bonus) {
       rollParts.push(attData.item.bonus);
     }
-    let thac0 = data.thac0.value;
+    let thac0 = context.thac0.value;
     if (options.type == "melee") {
-      dmgParts.push(data.scores.str.mod);
+      dmgParts.push(context.scores.str.mod);
     }
     // Add Melee mod to damage
     if (options.type == "melee") {
-      dmgParts.push(data.damage.mod.melee);
+      dmgParts.push(context.damage.mod.melee);
     }
     // Add Missile mod to damage
     if (options.type == "missile") {
-      dmgParts.push(data.damage.mod.missile);
+      dmgParts.push(context.damage.mod.missile);
     }
     const rollData = {
       actor: this,
@@ -686,7 +686,7 @@ export class AcksActor extends Actor {
     if (this.type != "character") {
       return;
     }
-    const data = this.system;
+    const context = this.system;
     // Compute treasure
     let total = 0;
     let treasure = this.items.filter(
@@ -695,38 +695,9 @@ export class AcksActor extends Actor {
     treasure.forEach((item) => {
       total += item.system.quantity.value * item.system.cost
     });
-    data.treasure = total;
+    context.treasure = total;
   }
 
-
-/* 
-  computeAC() {
-    if (this.data.type != "character") {
-      return;
-    }
-    // Compute AC
-    let baseAc = 9;
-    let baseAac = 0;
-    let AcShield = 0;
-    let AacShield = 0;
-    const data = this.data.data;
-    data.aac.naked = baseAac + data.scores.dex.mod;
-    data.ac.naked = baseAc - data.scores.dex.mod;
-    const armors = this.data.items.filter((i) => i.data.type == "armor");
-    armors.forEach((a) => {
-      if (a.data.data.equipped && a.data.data.type != "shield") {
-        baseAc = a.data.data.ac;
-        baseAac = a.data.data.aac.value;
-      } else if (a.data.data.equipped && a.data.data.type == "shield") {
-        AcShield = a.data.data.ac;
-        AacShield = a.data.data.aac.value;
-      }
-    });
-    data.aac.value = baseAac + data.scores.dex.mod + AacShield + data.aac.mod;
-    data.ac.value = baseAc - data.scores.dex.mod - AcShield - data.ac.mod;
-    data.ac.shield = AcShield;
-    data.aac.shield = AacShield;
-  }    */
 
 
   computeAC() {
@@ -766,7 +737,7 @@ export class AcksActor extends Actor {
         return;
     }
     // const data = this.data.data;
-    const data = this.system;
+    const context = this.system;
 
     const standard = {
       0: -3,
@@ -785,29 +756,29 @@ export class AcksActor extends Actor {
       24: 9,
       25: 10
     };
-    data.scores.str.mod = AcksActor._valueFromTable(
+    context.scores.str.mod = AcksActor._valueFromTable(
       standard,
-      data.scores.str.value
+      context.scores.str.value
     );
-    data.scores.int.mod = AcksActor._valueFromTable(
+    context.scores.int.mod = AcksActor._valueFromTable(
       standard,
-      data.scores.int.value
+      context.scores.int.value
     );
-    data.scores.dex.mod = AcksActor._valueFromTable(
+    context.scores.dex.mod = AcksActor._valueFromTable(
       standard,
-      data.scores.dex.value
+      context.scores.dex.value
     );
-    data.scores.cha.mod = AcksActor._valueFromTable(
+    context.scores.cha.mod = AcksActor._valueFromTable(
       standard,
-      data.scores.cha.value
+      context.scores.cha.value
     );
-    data.scores.wis.mod = AcksActor._valueFromTable(
+    context.scores.wis.mod = AcksActor._valueFromTable(
       standard,
-      data.scores.wis.value
+      context.scores.wis.value
     );
-    data.scores.con.mod = AcksActor._valueFromTable(
+    context.scores.con.mod = AcksActor._valueFromTable(
       standard,
-      data.scores.con.value
+      context.scores.con.value
     );
 
     const capped = {
@@ -820,16 +791,16 @@ export class AcksActor extends Actor {
       16: 1,
       18: 2,
     };
-    data.scores.dex.init = AcksActor._valueFromTable(
+    context.scores.dex.init = AcksActor._valueFromTable(
       standard,
-      data.scores.dex.value
+      context.scores.dex.value
     );
-    data.scores.cha.npc = AcksActor._valueFromTable(
+    context.scores.cha.npc = AcksActor._valueFromTable(
       standard,
-      data.scores.cha.value
+      context.scores.cha.value
     );
-    data.scores.cha.retain = data.scores.cha.mod + 4;
-    data.scores.cha.loyalty = data.scores.cha.mod;
+    context.scores.cha.retain = context.scores.cha.mod + 4;
+    context.scores.cha.loyalty = context.scores.cha.mod;
 
     const od = { // This is the dungeonbashing throw values per STR mod (18+ + 4×STR mod)
       0: 0,
@@ -842,18 +813,18 @@ export class AcksActor extends Actor {
       18: 6,
       19: 2,
     };
-    data.exploration.odMod = AcksActor._valueFromTable(
+    context.exploration.odMod = AcksActor._valueFromTable(
       od,
-      data.scores.str.value
+      context.scores.str.value
     );
 
     const literacy = {
       3: "ACKS.Illiterate",
       9: "ACKS.Literate",
     };
-    data.languages.literacy = AcksActor._valueFromTable(
+    context.languages.literacy = AcksActor._valueFromTable(
       literacy,
-      data.scores.int.value
+      context.scores.int.value
     );
 
     const spoken = {
@@ -870,9 +841,9 @@ export class AcksActor extends Actor {
       24: "ACKS.NativePlus9",
       25: "ACKS.NativePlus10",
     };
-    data.languages.spoken = AcksActor._valueFromTable(
+    context.languages.spoken = AcksActor._valueFromTable(
       spoken,
-      data.scores.int.value
+      context.scores.int.value
     );
 
       
@@ -881,7 +852,7 @@ export class AcksActor extends Actor {
    if (this.type != "character") {
       return;
     }
-    const data = this.system;
+    const context = this.system;
 
     const bhrcalc = {
         0: "1d2",
@@ -900,14 +871,14 @@ export class AcksActor extends Actor {
         171: "6d10",
         200: "7d10",
     };
-      data.hp.bhr = AcksActor._valueFromTable(
+      context.hp.bhr = AcksActor._valueFromTable(
         bhrcalc,
-        data.hp.max
+        context.hp.max
     );
    };
   computeAAB() {
-    const data = this.system;
+    const context = this.system;
     
-    data.thac0.bba = 10 - data.thac0.throw;
+    context.thac0.bba = 10 - context.thac0.throw;
   }
 }

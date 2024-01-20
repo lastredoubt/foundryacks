@@ -49,15 +49,15 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
    * The prepared data object contains both the actor data as well as additional sheet options
    */
   getData() {
-    const data = super.getData();
+    const context = super.getData();
 
-    data.config.ascendingAC = game.settings.get("acks", "ascendingAC");
-    data.config.initiative = game.settings.get("acks", "initiative") != "group";
-    data.config.BHR = game.settings.get("acks", "bhr");
-    data.config.removeMagicBonus = game.settings.get("acks", "removeMagicBonus");
+    context.config.ascendingAC = game.settings.get("acks", "ascendingAC");
+    context.config.initiative = game.settings.get("acks", "initiative") != "group";
+    context.config.BHR = game.settings.get("acks", "bhr");
+    context.config.removeMagicBonus = game.settings.get("acks", "removeMagicBonus");
 
-    data.isNew = this.actor.isNew();
-    return data;
+    context.isNew = this.actor.isNew();
+    return context;
   }
 
 
@@ -95,8 +95,8 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
   }
 
   _pushLang(table) {
-    const data = this.actor.system;
-    let update = duplicate(data[table]);
+    const context = this.actor.system;
+    let update = duplicate(context[table]);
     this._chooseLang().then((dialogInput) => {
       const name = CONFIG.ACKS.languages[dialogInput.choice];
       if (update.value) {
@@ -104,18 +104,18 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
       } else {
         update = { value: [name] };
       }
-      let newData = {};
-      newData[table] = update;
-      return this.actor.update({ data: newData });
+      let newContext = {};
+      newContext[table] = update;
+      return this.actor.updateSource({ system: newContext });
     });
   }
 
   _popLang(table, lang) {
-    const data = this.actor.system;
-    let update = data[table].value.filter((el) => el != lang);
-    let newData = {};
-    newData[table] = { value: update };
-    return this.actor.update({ data: newData });
+    const context = this.actor.system;
+    let update = context[table].value.filter((el) => el != lang);
+    let newContext = {};
+    newContext[table] = { value: update };
+    return this.actor.updateSource({ system: newContext });
   }
 
   /* -------------------------------------------- */
@@ -126,7 +126,7 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
     const item = this.actor.items.get(itemId);
     //this item.update appears to call the standard update call in JS 
 
-    return item.update({ "data.quantity.value": parseInt(event.target.value) });
+    return item.updateSource({ "system.quantity.value": parseInt(event.target.value) });
   }
 
   _onShowModifiers(event) {
@@ -156,7 +156,7 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
 
     html.find(".ability-score .attribute-name a").click((ev) => {
       let actorObject = this.actor;
-      let element = event.currentTarget;
+      let element = ev.currentTarget;
       let score = element.parentElement.parentElement.dataset.score;
       let stat = element.parentElement.parentElement.dataset.stat;
       if (!score) {
@@ -239,9 +239,9 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
       const itemData = {
         name: `New ${type.capitalize()}`,
         type: type,
-        data: duplicate(header.dataset),
+        system: duplicate(header.dataset),
       };
-      delete itemData.data["type"];
+      delete itemData.system["type"];
       await this.actor.createEmbeddedDocuments("Item", [
         itemData,
       ]);
@@ -253,9 +253,9 @@ export class AcksActorSheetCharacter extends AcksActorSheet {
       const item = this.actor.items.get(li.data("itemId"));
       //this item.update appears to call the standard update call in JS 
 
-      await item.update({
+      await item.updateSource({
         _id: li.data("itemId"),
-        data: {
+        system: {
           equipped: !item.system.equipped,
         },
       });

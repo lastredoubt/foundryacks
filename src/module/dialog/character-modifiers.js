@@ -28,11 +28,11 @@ export class AcksCharacterModifiers extends FormApplication {
    * @return {Object}
    */
   getData() {
-    const data = this.object.data;
+    const context = this.object;
 
-    data.user = game.user;
+    context.user = game.user;
 
-    return data;
+    return context;
   }
 
   /* -------------------------------------------- */

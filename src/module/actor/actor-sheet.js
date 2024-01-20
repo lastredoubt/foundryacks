@@ -11,17 +11,17 @@ export class AcksActorSheet extends ActorSheet {
   /* -------------------------------------------- */
 
   getData() {
-    const data = super.getData();
+    const context = super.getData();
 
-    data.config = CONFIG.ACKS;
+    context.config = CONFIG.ACKS;
     // Settings
-    data.config.ascendingAC = game.settings.get("acks", "ascendingAC");
-    data.config.encumbrance = game.settings.get("acks", "encumbranceOption");
+    context.config.ascendingAC = game.settings.get("acks", "ascendingAC");
+    context.config.encumbrance = game.settings.get("acks", "encumbranceOption");
 
     // Prepare owned items
-    this._prepareItems(data);
+    this._prepareItems(context);
 
-    return data;
+    return context;
   }
 
   activateEditor(target, editorOptions, initialContent) {
@@ -36,9 +36,9 @@ export class AcksActorSheet extends ActorSheet {
    * Organize and classify Owned Items for Character sheets
    * @private
    */
-  _prepareItems(data) {
+  _prepareItems(context) {
     // Partition items by category
-    let [items, weapons, armors, abilities, spells] = data.items.reduce(
+    let [items, weapons, armors, abilities, spells] = context.items.reduce(
       (arr, item) => {
         // Classify items into types
         if (item.type === "item") arr[0].push(item);
@@ -55,23 +55,23 @@ export class AcksActorSheet extends ActorSheet {
     var sortedSpells = {};
     var slots = {};
     for (var i = 0; i < spells.length; i++) {
-      let lvl = spells[i].data.lvl;
+      let lvl = spells[i].system.lvl;
       if (!sortedSpells[lvl]) sortedSpells[lvl] = [];
       if (!slots[lvl]) slots[lvl] = 0;
-      slots[lvl] += spells[i].data.cast;
+      slots[lvl] += spells[i].system.cast;
       sortedSpells[lvl].push(spells[i]);
     }
-    data.slots = {
+    context.slots = {
       used: slots,
     };
     // Assign and return
-    data.owned = {
+    context.owned = {
       items: items,
       weapons: weapons,
       armors: armors,
     };
-    data.abilities = abilities;
-    data.spells = sortedSpells;
+    context.abilities = abilities;
+    context.spells = sortedSpells;
   }
 
   async _onItemSummary(event) {
@@ -156,11 +156,11 @@ export class AcksActorSheet extends ActorSheet {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
       if (item.type == "weapon") {
-        if (this.actor.data.type === "monster") {
+        if (this.actor.type === "monster") {
           //this item.update appears to call the standard update call in JS 
 
           item.updateSource({
-            data: { counter: { value: item.system.counter.value - 1 } },
+            system: { counter: { value: item.system.counter.value - 1 } },
           });
         }
         item.rollWeapon({ skipDialog: ev.ctrlKey });

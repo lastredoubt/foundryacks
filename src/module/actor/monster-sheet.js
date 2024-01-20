@@ -78,7 +78,7 @@ export class AcksActorSheetMonster extends AcksActorSheet {
 
     // Settings
     data.config.morale = game.settings.get("acks", "morale");
-    data.data.system.details.treasure.link = await TextEditor.enrichHTML(data.data.system.details.treasure.table);
+    system.system.details.treasure.link = await TextEditor.enrichHTML(system.system.details.treasure.table);
     data.isNew = this.actor.isNew();
     return data;
   }
@@ -218,7 +218,7 @@ export class AcksActorSheetMonster extends AcksActorSheet {
         const itemData = {
           name: name ? name : `New ${type.capitalize()}`,
           type: type,
-          data: duplicate(header.dataset),
+          system: duplicate(header.dataset),
         };
         delete itemData.data["type"];
         return itemData;

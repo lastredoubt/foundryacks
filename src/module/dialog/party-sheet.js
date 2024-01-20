@@ -33,23 +33,23 @@ export class AcksPartySheet extends FormApplication {
       ascending: game.settings.get('acks', 'ascendingAC')
     };
 
-    const data = {
-      data: this.object,
+    const context = {
+      system: this.object,
       config: CONFIG.ACKS,
       user: game.user,
       settings: settings
     };
 
-    return data;
+    return context;
   }
 
   _onDrop(event) {
     event.preventDefault();
     // WIP Drop Items
-    let data;
+    let context;
     try {
-      data = JSON.parse(event.dataTransfer.getData("text/plain"));
-      if (data.type !== "Item") return;
+      context = JSON.parse(event.dataTransfer.getData("text/plain"));
+      if (context.type !== "Item") return;
     } catch (err) {
       return false;
     }
@@ -68,7 +68,7 @@ export class AcksPartySheet extends FormApplication {
     `;
 
     let pcs = this.object.documents.filter((actor) => {
-      return actor.getFlag('acks', 'party') && actor.data.type === "character";
+      return actor.getFlag('acks', 'party') && actor.type === "character";
     });
 
     new Dialog({
@@ -82,12 +82,12 @@ export class AcksPartySheet extends FormApplication {
             let toDeal = html.find('input[name="total"]').val();
             // calculate number of shares
             let shares = 0;
-            pcs.forEach(c => {shares += c.data.data.details.xp.share});
+            pcs.forEach(c => {shares += c.system.details.xp.share});
             const value = parseFloat(toDeal) / shares;
             if (value) {
               // Give experience
               pcs.forEach((c) => {
-                c.getExperience(Math.floor(c.data.data.details.xp.share * value));
+                c.getExperience(Math.floor(c.system.details.xp.share * value));
               });
             }
           },

@@ -42,10 +42,10 @@ export const addChatMessageContextOptions = function(html, options) {
 
 /* -------------------------------------------- */
 
-export const addChatMessageButtons = function(msg, html, data) {
+export const addChatMessageButtons = function(msg, html, context) {
   // Hide blind rolls
   let blindable = html.find('.blindable');
-  if (msg.data.blind && !game.user.isGM && blindable && blindable.data('blind') === true) {
+  if (msg.blind && !game.user.isGM && blindable && blindable.data('blind') === true) {
     blindable.replaceWith("<div class='dice-roll'><div class='dice-result'><div class='dice-formula'>???</div></div></div>");
   }
   // Buttons

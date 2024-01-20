@@ -17,7 +17,7 @@ export const showPartySheet = (object) => {
     }).render(true);
 }
 
-export const update = (actor, data) => {
+export const update = (actor, context) => {
     if (actor.getFlag('acks', 'party')) {
         Object.values(ui.windows).forEach(w => {
             if (w instanceof AcksPartySheet) {
