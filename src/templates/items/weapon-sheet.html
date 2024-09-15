@@ -23,8 +23,8 @@
             <div class="form-fields">
               <input
                 type="text"
-                name="data.cost"
-                value="{{data.data.cost}}"
+                name="system.cost"
+                value="{{system.cost}}"
                 data-dtype="Number"
                 />
             </div>
@@ -35,8 +35,8 @@
             <div class="form-fields">
               <input
                 type="text"
-                name="data.weight"
-                value="{{data.data.weight}}"
+                name="system.weight"
+                value="{{system.weight}}""
                 data-dtype="Number"
                 />
             </div>
@@ -44,7 +44,7 @@
         </div>
       </div>
       <ol class="tag-list">
-        {{#each data.data.tags as |tag|}}
+        {{#each system.tags as |tag|}}
         <li class="tag" title="{{tag.title}}" data-tag="{{tag.value}}">
           <span>{{tag.value}}</span>
           <a class="tag-delete"><i class="fas fa-times"></i></a>
@@ -71,8 +71,8 @@
           <div class="form-fields">
             <input
               type="text"
-              name="data.damage"
-              value="{{data.data.damage}}"
+              name="system.damage"
+              value="{{system.damage}}"
               data-dtype="String"
               />
           </div>
@@ -83,40 +83,40 @@
           <div class="form-fields">
             <input
               type="text"
-              name="data.bonus"
-              value="{{data.data.bonus}}"
+              name="system.bonus"
+              value="{{system.bonus}}"
               data-dtype="Number"
               />
           </div>
         </div>
         <div class="form-group attack-type">
           <a title="{{localize 'ACKS.items.Melee'}}" class="melee-toggle {{#if
-            data.data.melee}}active{{/if}}"><i class="fas fa-fist-raised"></i></a>
+            system.melee}}active{{/if}}"><i class="fas fa-fist-raised"></i></a>
           <a title="{{localize 'ACKS.items.Missile'}}" class="missile-toggle
-            {{#if data.data.missile}}active{{/if}}"><i class="fas fa-bullseye"></i></a>
+            {{#if system.le}}active{{/if}}"><i class="fas fa-bullseye"></i></a>
         </div>
-        {{#if data.data.missile}}
+        {{#if system.missile}}
         <div class="form-group block-input">
           <label>{{localize 'ACKS.items.Range'}}</label>
           <div class="form-fields range">
             <input
               type="text"
-              name="data.range.short"
-              value="{{data.data.range.short}}"
+              name="system.range.short"
+              value="{{system.range.short}}"
               data-dtype="Number"
               />
               <div class="sep"></div>
               <input
               type="text"
-              name="data.range.medium"
-              value="{{data.data.range.medium}}"
+              name="system.range.medium"
+              value="{{system.range.medium}}"
               data-dtype="Number"
               />
               <div class="sep"></div>
               <input
               type="text"
-              name="data.range.long"
-              value="{{data.data.range.long}}"
+              name="system.range.long"
+              value="{{system.range.long}}"
               data-dtype="Number"
               />
           </div>
@@ -125,8 +125,8 @@
         <div class="form-group">
           <label>{{localize 'ACKS.spells.Save'}}</label>
           <div class="form-fields">
-            <select name="data.save">
-              {{#select data.data.save}}
+            <select name="system.save">
+              {{#select system.saves}}
               <option value=""></option>
               {{#each config.saves_short as |save a|}}
               <option value="{{a}}">{{save}}</option>
@@ -140,18 +140,18 @@
           <div class="form-fields">
             <input
               type="checkbox"
-              name="data.slow"
-              value="{{data.data.slow}}"
+              name="system.slow"
+              value="{{system.slow}}"
               {{checked
-              data.data.slow}}
+              system.slow}}
               data-dtype="Number"
               />
           </div>
         </div>
       </div>
       <div class="description weapon-editor">
-        {{editor content=data.data.description target="data.description" button=true
-        owner=owner editable=editable}}
+        {{editor richDescription target="system.description"
+        button=true editable=editable}}
       </div>
     </div>
   </section>

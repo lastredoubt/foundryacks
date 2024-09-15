@@ -144,10 +144,10 @@ export class AcksDice {
     result.target = data.roll.thac0;
 
     const targetAc = data.roll.target
-      ? data.roll.target.actor.data.data.ac.value
+      ? data.roll.target.actor.system.ac.value
       : 9;
     const targetAac = data.roll.target
-      ? data.roll.target.actor.data.data.aac.value
+      ? data.roll.target.actor.system.aac.value
       : 0;
     result.victim = data.roll.target ? data.roll.target.data.name : null;
 

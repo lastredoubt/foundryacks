@@ -13,7 +13,7 @@ export class AcksItem extends Item {
   prepareData() {
     // Set default image
     let img = CONST.DEFAULT_TOKEN;
-    switch (this.data.type) {
+    switch (this.type) {
       case "spell":
         img = "/systems/acks/assets/default/spell.png";
         break;
@@ -30,7 +30,7 @@ export class AcksItem extends Item {
         img = "/systems/acks/assets/default/item.png";
         break;
     }
-    if (!this.data.img) this.data.img = img;
+    if (!this.img) this.img = img;
     super.prepareData();
   }
 
@@ -39,20 +39,20 @@ export class AcksItem extends Item {
     html.on("click", ".item-name", this._onChatCardToggleContent.bind(this));
   }
 
-  getChatData(htmlOptions) {
-    const data = duplicate(this.data.data);
+  async getChatData(htmlOptions) {
+    const data = duplicate(this.system);
 
     // Rich text description
-    data.description = TextEditor.enrichHTML(data.description, htmlOptions);
+    data.description = await TextEditor.enrichHTML(data.description, htmlOptions);
 
     // Item properties
     const props = [];
     const labels = this.labels;
 
-    if (this.data.type == "weapon") {
+    if (this.type == "weapon") {
       data.tags.forEach(t => props.push(t.value));
     }
-    if (this.data.type == "spell") {
+    if (this.type == "spell") {
       props.push(`${data.class} ${data.lvl}`, data.range, data.duration);
     }
     if (data.hasOwnProperty("equipped")) {
@@ -65,16 +65,16 @@ export class AcksItem extends Item {
   }
 
   rollWeapon(options = {}) {
-    let isNPC = this.actor.data.type != "character";
+    let isNPC = this.actor.type != "character";
     const targets = 5;
-    const data = this.data.data;
+    const data = this.system;
     let type = isNPC ? "attack" : "melee";
     const rollData =
     {
-      item: this.data,
-      actor: this.actor.data,
+      item: this,
+      actor: this.actor,
       roll: {
-        save: this.data.data.save,
+        save: this.system.save,
         target: null
       }
     };
@@ -111,7 +111,7 @@ export class AcksItem extends Item {
   }
 
   async rollFormula(options = {}) {
-    const data = this.data.data;
+    const data = this.system;
     if (!data.roll) {
       throw new Error("This Item does not have a formula to roll!");
     }
@@ -122,8 +122,8 @@ export class AcksItem extends Item {
     let type = data.rollType;
 
     const newData = {
-      actor: this.actor.data,
-      item: this.data,
+      actor: this.actor,
+      item: this,
       roll: {
         type: type,
         target: data.rollTarget,
@@ -144,9 +144,9 @@ export class AcksItem extends Item {
   }
 
   spendSpell() {
-    this.update({
+    this.updateSource({
       data: {
-        cast: this.data.data.cast + 1,
+        cast: this.system.cast + 1,
       },
     }).then(() => {
       this.show({ skipDialog: true });
@@ -163,8 +163,8 @@ export class AcksItem extends Item {
       return `<li class='tag'>${fa}${tag}</li>`;
     };
 
-    const data = this.data.data;
-    switch (this.data.type) {
+    const data = this.system;
+    switch (this.type) {
       case "weapon":
         let wTags = formatTag(data.damage, "fa-tint");
         data.tags.forEach((t) => {
@@ -201,7 +201,7 @@ export class AcksItem extends Item {
   }
 
   pushTag(values) {
-    const data = this.data.data;
+    const data = this.system;
     let update = [];
     if (data.tags) {
       update = duplicate(data.tags);
@@ -238,16 +238,16 @@ export class AcksItem extends Item {
       update = values;
     }
     newData.tags = update;
-    return this.update({ data: newData });
+    return this.updateSource({ data: newData });
   }
 
   popTag(value) {
-    const data = this.data.data;
+    const data = this.system;
     let update = data.tags.filter((el) => el.value != value);
     let newData = {
       tags: update,
     };
-    return this.update({ data: newData });
+    return this.updateSource({ data: newData });
   }
 
   roll() {
@@ -259,7 +259,7 @@ export class AcksItem extends Item {
         this.spendSpell();
         break;
       case "ability":
-        if (this.data.data.roll) {
+        if (this.system.roll) {
           this.rollFormula();
         } else {
           this.show();
@@ -281,12 +281,12 @@ export class AcksItem extends Item {
     const templateData = {
       actor: this.actor,
       tokenId: token ? `${token.parent.id}.${token.id}` : null,
-      item: this.data,
+      item: this,
       data: this.getChatData(),
       labels: this.labels,
       isHealing: this.isHealing,
       hasDamage: this.hasDamage,
-      isSpell: this.data.type === "spell",
+      isSpell: this.type === "spell",
       hasSave: this.hasSave,
       config: CONFIG.ACKS,
     };

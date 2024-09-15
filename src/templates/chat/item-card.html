@@ -6,7 +6,7 @@
     </header>
 
     <div class="card-content">
-        {{{data.description}}}
+        {{{system.description}}}
     </div>
 
     <div class="card-buttons">
@@ -22,19 +22,19 @@
         </button>
         {{/if}}
 
-        {{#if data.save}}
-        <button data-action="save" data-save="{{data.save}}" disabled>
-            {{lookup config.saves_long data.save}} - {{localize "ACKS.spells.Save"}}
+        {{#if system.save}}
+        <button data-action="save" data-save="{{system.save}}" disabled>
+            {{lookup config.saves_long system.save}} - {{localize "ACKS.spells.Save"}}
         </button>
         {{/if}}
 
-        {{#if data.roll}}
-        <button data-action="formula">{{ localize "ACKS.Roll"}} {{data.roll}} {{#if data.blindroll}}({{localize 'ACKS.items.BlindRoll'}}){{/if}}</button>
+        {{#if system.roll}}
+        <button data-action="formula">{{ localize "ACKS.Roll"}} {{system.roll}} {{#if system.blindroll}}({{localize 'ACKS.items.BlindRoll'}}){{/if}}</button>
         {{/if}}
     </div>
 
     <footer class="card-footer">
-        {{#each data.properties}}
+        {{#each system.properties}}
         <span>{{this}}</span>
         {{/each}}
     </footer>

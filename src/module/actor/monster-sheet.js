@@ -71,13 +71,16 @@ export class AcksActorSheetMonster extends AcksActorSheet {
    * Prepare data for rendering the Actor sheet
    * The prepared data object contains both the actor data as well as additional sheet options
    */
-  getData() {
+  async getData() {
     const data = super.getData();
 
     // Settings
     data.config.morale = game.settings.get("acks", "morale");
-    data.data.data.details.treasure.link = TextEditor.enrichHTML(data.data.data.details.treasure.table);
     data.isNew = this.actor.isNew();
+    [ data.system.details.treasure.link, data.richBiography ] = await Promise.all([
+      TextEditor.enrichHTML(data.system.details.treasure.table, { async: true }),
+      TextEditor.enrichHTML(this.object.system.details.biography, { async: true })
+    ]); 
     return data;
   }
 
@@ -98,7 +101,7 @@ export class AcksActorSheetMonster extends AcksActorSheet {
     } else {
       link = `@RollTable[${data.id}]`;
     }
-    this.actor.update({ "data.details.treasure.table": link });
+    this.actor.update({ "system.details.treasure.table": link });
   }
 
   /* -------------------------------------------- */
@@ -140,7 +143,7 @@ export class AcksActorSheetMonster extends AcksActorSheet {
       await weapon.update({
         data: {
           counter: {
-            value: parseInt(weapon.data.data.counter.max, 10),
+            value: parseInt(weapon.system.counter.max, 10),
           },
         },
       });
@@ -153,11 +156,11 @@ export class AcksActorSheetMonster extends AcksActorSheet {
     const item = this.actor.items.get(itemId);
     if (event.target.dataset.field == "value") {
       return item.update({
-        "data.counter.value": parseInt(event.target.value),
+        "system.counter.value": parseInt(event.target.value),
       });
     } else if (event.target.dataset.field == "max") {
       return item.update({
-        "data.counter.max": parseInt(event.target.value),
+        "system.counter.max": parseInt(event.target.value),
       });
     }
   }
@@ -254,7 +257,7 @@ export class AcksActorSheetMonster extends AcksActorSheet {
     html.find(".item-pattern").click(ev => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
-      let currentColor = item.data.data.pattern;
+      let currentColor = item.system.pattern;
       let colors = Object.keys(CONFIG.ACKS.colors);
       let index = colors.indexOf(currentColor);
       if (index + 1 == colors.length) {
@@ -263,7 +266,7 @@ export class AcksActorSheetMonster extends AcksActorSheet {
         index++;
       }
       item.update({
-        "data.pattern": colors[index]
+        "system.pattern": colors[index]
       })
     });
 
